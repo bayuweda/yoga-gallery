@@ -1,3 +1,5 @@
+import { Cinzel } from "next/font/google";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -8,9 +10,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        background: "#060504",
+        primary: "#D4AF37",
+        secondary: "#FFFFF0",
       },
+    },
+    fontFamily: {
+      Cinzel: ["Cinzel", "serif"], // Tambahkan nama font
     },
   },
   plugins: [],
