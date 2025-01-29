@@ -18,7 +18,7 @@ import { EffectCoverflow, Autoplay } from "swiper/modules";
 // Komponen untuk menampilkan gambar dan judul
 function ServiceCard({ src, title }) {
   return (
-    <div className="relative w-80   rounded-lg">
+    <div className="relative lg:w-80   rounded-lg">
       {/* Gambar dengan ukuran penuh */}
       <img
         src={src}
@@ -26,7 +26,7 @@ function ServiceCard({ src, title }) {
         className="w-full h-full object-cover rounded-lg"
       />
       {/* Overlay teks */}
-      <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white text-2xl font-bold z-10">
+      <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white lg:text-2xl font-bold z-10">
         {title}
       </h1>
     </div>
@@ -36,18 +36,18 @@ function ServiceCard({ src, title }) {
 export default function Service() {
   return (
     <>
-      <section className="mt-24">
+      <section className="lg:mt-24">
         <div className="w-full flex flex-col justify-center items-center ">
-          <div className="w-[40%] flex flex-col gap-4 text-center">
-            <h1 className="text-primary px-6 font-bold text-2xl">
+          <div className="lg:w-[40%] flex flex-col gap-4 text-center">
+            <h1 className="text-primary text-sm px-12 lg:px-6 font-bold lg:text-2xl">
               CIPTAKAN KENANGAN TAK TERLUPAKAN
             </h1>
-            {/* <p className="text-primary text-base font-normal">
+            <p className="text-secondary lg:hidden text-[10px] lg:text-base font-Playfair lg:font-semibold  font-light px-12">
               Di Yoga Gallery, kami menawarkan berbagai layanan fotografi yang
               disesuaikan dengan kebutuhan Anda. Dari sesi foto pribadi hingga
               sesi foto acara spesial, kami siap membantu Anda menangkap momen
               berharga
-            </p> */}
+            </p>
           </div>
         </div>
         <Swiper

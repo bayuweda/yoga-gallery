@@ -1,4 +1,4 @@
-import { Cinzel } from "next/font/google";
+import { Cinzel, Playfair } from "next/font/google";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -17,6 +17,7 @@ export default {
     },
     fontFamily: {
       Cinzel: ["Cinzel", "serif"], // Tambahkan nama font
+      Playfair: "Playfair",
     },
   },
   plugins: [],

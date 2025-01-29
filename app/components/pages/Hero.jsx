@@ -19,13 +19,13 @@ export default function Hero() {
   };
 
   return (
-    <section className="w-full flex justify-end h-[100%]">
-      <div className="w-1/2 px-24 flex gap-4 flex-col justify-center">
+    <section className="w-full flex justify-end h-[70%] lg:h-[100%]">
+      <div className="lg:w-1/2 lg:px-24 px-8 flex gap-4 flex-col justify-center">
         <motion.h1
           initial="hidden"
           animate="visible"
           variants={textVariants}
-          className="text-4xl  text-primary"
+          className="lg:text-4xl text-xl   text-primary"
         >
           {"ABADIKAN MOMEN BERHARGA ANDA DENGAN SENTUHAN PROFESIONAL"
             .split("")
@@ -36,7 +36,10 @@ export default function Hero() {
             ))}
         </motion.h1>
 
-        <h2 ref={ref} className="text-base text-secondary">
+        <h2
+          ref={ref}
+          className="lg:text-base text-[10px]  pr-24 lg:pr-0 text-secondary"
+        >
           {text.split("").map((letter, index) => (
             <motion.span
               key={index}
@@ -62,7 +65,7 @@ export default function Hero() {
           }}
           className=""
         >
-          <button className="border-primary hover:bg-primary px-2 hover:text-secondary border  py-2 rounded-md text-sm text-primary">
+          <button className="border-primary font-Playfair text-[10px] hover:bg-primary px-2 hover:text-secondary border  py-2 rounded-md text-sm text-primary">
             {[
               "B",
               "O",

@@ -7,11 +7,12 @@ import About from "./components/pages/About";
 export default function Home() {
   return (
     <>
-      <div className="bg-[url('/assets/hero-bg.png')] bg-[left_-60px] bg-cover  bg-white h-screen">
+      <div className="bg-[url('/assets/hero-bg.png')] bg-[left_-60px] bg-cover h-svh bg-white lg:h-screen">
         <Navbar />
         <Hero />
+        <Service />
       </div>
-      <div className="w-full container mx-auto">
+      <div className="w-full hidden lg:block container mx-auto">
         <Service />
       </div>
       <About />
