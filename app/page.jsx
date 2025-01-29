@@ -2,6 +2,7 @@ import Image from "next/image";
 import Navbar from "./components/pages/Navbar";
 import Hero from "./components/pages/Hero";
 import Service from "./components/pages/Services";
+import About from "./components/pages/About";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <div className="w-full container mx-auto">
         <Service />
       </div>
+      <About />
     </>
   );
 }

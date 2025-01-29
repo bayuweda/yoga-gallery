@@ -18,7 +18,7 @@ import { EffectCoverflow, Autoplay } from "swiper/modules";
 // Komponen untuk menampilkan gambar dan judul
 function ServiceCard({ src, title }) {
   return (
-    <div className="relative w-96   rounded-lg">
+    <div className="relative w-80   rounded-lg">
       {/* Gambar dengan ukuran penuh */}
       <img
         src={src}
@@ -54,12 +54,12 @@ export default function Service() {
           loop
           grabCursor
           slidesPerView={3}
+          spaceBetween={0}
           effect="coverflow"
           autoplay={{
             delay: 2500, // Waktu delay antar slide (dalam milidetik)
             disableOnInteraction: false, // Memungkinkan autoplay tetap berjalan setelah interaksi
           }}
-          spaceBetween={10}
           coverflowEffect={{
             rotate: 0,
             scale: 0.8,
