@@ -19,7 +19,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="w-full flex justify-end h-[70%] lg:h-[100%]">
+    <section className="w-full font-cinzel flex justify-end h-[70%] lg:h-[100%]">
       <div className="lg:w-1/2 lg:px-24 px-8 flex gap-4 flex-col justify-center">
         <motion.h1
           initial="hidden"
@@ -65,7 +65,7 @@ export default function Hero() {
           }}
           className=""
         >
-          <button className="border-primary font-Playfair text-[10px] hover:bg-primary px-2 hover:text-secondary border  py-2 rounded-md text-sm text-primary">
+          <button className="border-primary font-playfair text-[9px] hover:bg-primary px-2 hover:text-secondary border  py-2 rounded-md text-sm text-primary">
             {[
               "B",
               "O",

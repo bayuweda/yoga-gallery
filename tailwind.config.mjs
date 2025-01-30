@@ -16,8 +16,9 @@ export default {
       },
     },
     fontFamily: {
-      Cinzel: ["Cinzel", "serif"], // Tambahkan nama font
-      Playfair: "Playfair",
+      cinzel: ["Cinzel", "serif"],
+      playfair: ["Playfair", "serif"],
+      jost: ["Jost", "sans-serif"], // Perbaiki formatnya
     },
   },
   plugins: [],

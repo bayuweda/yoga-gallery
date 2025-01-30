@@ -3,6 +3,10 @@ import Navbar from "./components/pages/Navbar";
 import Hero from "./components/pages/Hero";
 import Service from "./components/pages/Services";
 import About from "./components/pages/About";
+import Portofolio from "./components/pages/Portofolio";
+import Pricing from "./components/pages/pricing";
+import Testimoni from "./components/pages/Testimoni";
+import Footer from "./components/pages/Footer";
 
 export default function Home() {
   return (
@@ -16,6 +20,10 @@ export default function Home() {
         <Service />
       </div>
       <About />
+      <Portofolio />
+      <Pricing />
+      <Testimoni />
+      <Footer />
     </>
   );
 }

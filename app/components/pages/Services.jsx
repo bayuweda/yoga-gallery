@@ -36,7 +36,7 @@ function ServiceCard({ src, title }) {
 export default function Service() {
   return (
     <>
-      <section className="lg:mt-24">
+      <section className="lg:mt-24 font-cinzel">
         <div className="w-full flex flex-col justify-center items-center ">
           <div className="lg:w-[40%] flex flex-col gap-4 text-center">
             <h1 className="text-primary text-sm px-12 lg:px-6 font-bold lg:text-2xl">

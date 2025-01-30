@@ -43,7 +43,7 @@ export default function Navbar() {
   return (
     <Disclosure
       as="nav"
-      className={`fixed top-0 left-0 w-full z-50 shadow-md transition-all duration-300 ${
+      className={`fixed top-0 left-0 w-full z-50 font-cinzel shadow-md transition-all duration-300 ${
         isScrolled ? "bg-black bg-opacity-90" : "bg-transparent"
       }`}
     >

@@ -19,14 +19,14 @@ export default function About() {
   };
 
   return (
-    <section ref={ref} className=" mt-44 min-h-screen">
+    <section ref={ref} className=" mt-44  lg:min-h-screen">
       <motion.h1
         variants={childVariants}
         className="text-xl text-center font-bold lg:hidden text-primary"
       >
         ABOUT US
       </motion.h1>
-      <div className="w-full flex-wrap lg:flex-nowrap  flex justify-center items-center">
+      <div className="w-full  flex-wrap lg:flex-nowrap  flex justify-center items-center">
         <div className="w-1/2 justify-center relative lg:h-[500px] flex">
           <div className="relative w-[100px] h-[150px] lg:w-[300px] lg:h-[400px]">
             <motion.img
