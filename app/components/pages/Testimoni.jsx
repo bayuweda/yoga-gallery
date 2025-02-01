@@ -4,6 +4,7 @@ import React, { useRef } from "react";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow, Autoplay } from "swiper/modules";
 
 // Data testimoni
 const testimonials = [
@@ -67,6 +68,7 @@ export default function Testimoni() {
           loop={true} // Looping otomatis
           navigation={false} // Nonaktifkan navigasi default
           pagination={{ clickable: true }} // Pagination untuk indikator slide
+          modules={[Autoplay]}
         >
           {testimonials.map((testimonial, index) => (
             <SwiperSlide key={index}>
