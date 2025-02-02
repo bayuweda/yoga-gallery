@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 import Cookies from "js-cookie";
+import Modal from "../components/Modal/Modal";
 
 export default function Login() {
   const [form, setForm] = useState({ email: "", password: "" });
   const router = useRouter();
-  const [error, setError] = useState("");
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -25,25 +27,37 @@ export default function Login() {
       // Simpan token ke cookies
       Cookies.set("jwt", response.data.access_token, { expires: 7 });
 
-      // Arahkan ke halaman utama
-      router.push("/");
+      // Tampilkan modal sukses
+      setIsSuccessOpen(true);
+
+      setTimeout(() => {
+        setIsSuccessOpen(false);
+        router.push("/");
+      }, 2000);
     } catch (error) {
-      setError("Login gagal. Cek email dan password.");
+      console.error("Login failed:", error);
+      setIsErrorOpen(true);
+
+      setTimeout(() => {
+        setIsErrorOpen(false);
+      }, 2000);
     }
   };
 
   return (
-    <section className="w-full h-screen bg-secondary flex justify-center items-center">
-      <div className="w-[60%] rounded-md shadow-lg  flex ">
-        <div className="w-1/2 text-secondary font-bold text-2xl flex-col items-center bg-black rounded-l-md flex justify-center py-4  ">
-          <img className="" src="/assets/logo-login.png" alt="" />
+    <section className="w-full h-screen bg-black/55 flex lg:justify-center lg:items-center">
+      <div className="lg:w-[60%] px-4 lg:px-0 rounded-md shadow-lg shadow-primary/25 flex flex-wrap">
+        <div className="lg:w-1/2 w-full text-secondary font-bold text-2xl items-center bg-black rounded-l-md flex justify-center py-4">
+          <img
+            className="w-28 lg:w-56"
+            src="/assets/logo-login.png"
+            alt="Logo"
+          />
         </div>
 
-        <div className="w-1/2 bg-secondary flex flex-col rounded-r-md  items-center  p-6 ">
-          <h1 className="text-3xl font-bold text-primary mb-2 ">
-            Welcome Back
-          </h1>
-          <h3 className="mb-14 text-sm text-black/40 font-light">
+        <div className="lg:w-1/2 w-full bg-secondary flex flex-col rounded-r-md items-center p-6">
+          <h1 className="text-3xl font-bold text-primary mb-2">Welcome Back</h1>
+          <h3 className="mb-10 text-sm text-black/40 font-light">
             New Here?{" "}
             <Link href="/register">
               <strong className="text-primary text-sm">
@@ -52,7 +66,6 @@ export default function Login() {
             </Link>
           </h3>
           <div className="w-full">
-            {error && <p className="text-red-500">{error}</p>}
             <form onSubmit={handleSubmit}>
               <label className="text-sm font-bold" htmlFor="email">
                 Email
@@ -81,7 +94,7 @@ export default function Login() {
               <div className="w-full flex justify-end">
                 <button
                   type="submit"
-                  className="  bg-primary text-white px-4 py-2 rounded"
+                  className="bg-primary text-white px-4 py-2 rounded"
                 >
                   Login
                 </button>
@@ -90,6 +103,22 @@ export default function Login() {
           </div>
         </div>
       </div>
+
+      {/* Modal Success */}
+      <Modal
+        type="success"
+        message="Login successful! Redirecting..."
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+      />
+
+      {/* Modal Error */}
+      <Modal
+        type="error"
+        message="Login failed. Please check your credentials."
+        isOpen={isErrorOpen}
+        onClose={() => setIsErrorOpen(false)}
+      />
     </section>
   );
 }

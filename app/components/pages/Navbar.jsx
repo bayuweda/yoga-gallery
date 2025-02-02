@@ -13,6 +13,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import Cookies from "js-cookie";
 import axios from "axios";
+import Modal from "../Modal/Modal";
 
 const navigation = [
   { name: "BERANDA", href: "#", current: true },
@@ -27,9 +28,10 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
-
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
+  const [isSuccessOpen, setIsSuccessOpen] = useState(false);
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,8 +101,12 @@ export default function Navbar() {
     setIsAuthenticated(false);
     setUser(null);
 
-    // Muat ulang halaman
-    window.location.reload();
+    setIsSuccessOpen(true);
+
+    setTimeout(() => {
+      setIsSuccessOpen(false);
+      window.location.reload();
+    }, 2000);
   };
 
   return (
@@ -110,6 +116,12 @@ export default function Navbar() {
         isScrolled ? "bg-black bg-opacity-90" : "bg-transparent"
       }`}
     >
+      <Modal
+        type="success"
+        message="Logout successful! "
+        isOpen={isSuccessOpen}
+        onClose={() => setIsSuccessOpen(false)}
+      />
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -154,32 +166,31 @@ export default function Navbar() {
           </div>
 
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            {/* Profile dropdown */}
             {!isAuthenticated ? (
-              <div className="flex gap-4 font-bold">
+              <div className="flex lg:gap-4 gap-2 font-bold">
                 <Link href="/register">
-                  <button className="border-primary font-playfair text-base hover:bg-primary px-2 hover:text-secondary border  py-1 rounded-md  text-primary">
+                  <button className="border-primary font-playfair text-[10px] lg:text-base hover:bg-primary px-2 hover:text-secondary border  py-1 rounded-md  text-primary">
                     Register
                   </button>
                 </Link>
 
                 <Link href="/login">
-                  <button className="border-primary font-playfair text-base bg-primary text-secondary  hover:bg-primary px-2 hover:text-secondary border  py-1 rounded-md  ">
+                  <button className="border-primary font-playfair text-[10px] lg:text-base bg-primary text-secondary  hover:bg-primary px-2 hover:text-secondary border  py-1 rounded-md  ">
                     Login
                   </button>
                 </Link>
               </div>
             ) : (
               <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                {/* <button
+                <button
                   type="button"
                   className="relative rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden"
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">View notifications</span>
                   <BellIcon aria-hidden="true" className="size-6" />
-                </button> */}
-                <h1 className="text-white text-base">{user.name}</h1>
+                </button>
+
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <MenuButton className="relative flex rounded-full bg-gray-800 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden">
@@ -223,6 +234,9 @@ export default function Navbar() {
                     </MenuItem>
                   </MenuItems>
                 </Menu>
+                {/* <h1 className="text-white ml-2 font-jost text-base">
+                  {user.name}
+                </h1> */}
               </div>
             )}
           </div>

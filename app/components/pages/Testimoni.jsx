@@ -52,7 +52,7 @@ export default function Testimoni() {
   const swiperRef = useRef(null);
 
   return (
-    <section className="bg-[url('/assets/bg-testimoni.png')] bg-no-repeat h-44 lg:h-auto py-8 flex flex-col items-center justify-center bg-cover w-full px-6">
+    <section className="bg-[url('/assets/bg-testimoni.png')] bg-no-repeat  lg:h-auto py-8 flex flex-col items-center justify-center bg-cover w-full px-6">
       <div className=" ">
         <img src="/assets/“.png" alt="" />
       </div>
