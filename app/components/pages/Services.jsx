@@ -1,12 +1,28 @@
 "use client";
 
 // Data untuk Service
+// Data untuk Service
 const ServiceData = [
-  { title: "Best picture", images: "/assets/service (1).png" },
-  { title: "Best picture", images: "/assets/service (2).png" },
-  { title: "Best picture", images: "/assets/service (3).png" },
-  { title: "Best picture", images: "/assets/service (4).png" },
-  { title: "Best picture", images: "/assets/service (5).png" },
+  {
+    title: "Nikmati momen hangat bersama keluarga",
+    images: "/assets/service/keluarga.jpg", // foto keluarga
+  },
+  {
+    title: "Ekspresikan dirimu dengan foto personal",
+    images: "/assets/service/personal.JPG", // foto personal
+  },
+  {
+    title: "Abadikan petualangan serumu saat travel",
+    images: "/assets/service/travel.jpg", // foto travel
+  },
+  {
+    title: "Kenangan indah tahun ini dalam buku tahunan",
+    images: "/assets/service/yearbook.JPG", // foto yearbook
+  },
+  {
+    title: "Tampilkan sisi terbaikmu lewat portrait elegan",
+    images: "/assets/service/potrait.jpg", // foto portrait
+  },
 ];
 
 import React from "react";
@@ -18,17 +34,23 @@ import { EffectCoverflow, Autoplay } from "swiper/modules";
 // Komponen untuk menampilkan gambar dan judul
 function ServiceCard({ src, title }) {
   return (
-    <div className="relative lg:w-80   rounded-lg">
-      {/* Gambar dengan ukuran penuh */}
+    <div className="relative lg:w-80 rounded-lg overflow-hidden">
+      {/* Gambar utama */}
       <img
         src={src}
         alt={title}
         className="w-full h-full object-cover rounded-lg"
       />
-      {/* Overlay teks */}
-      <h1 className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white lg:text-2xl font-bold z-10">
-        {title}
-      </h1>
+
+      {/* Lapisan blur */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm z-0 rounded-lg" />
+
+      {/* Teks di tengah */}
+      <div className=" w-full ">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border w-[90%] h-[90%] text-primary px-1 lg:text-2xl font-bold z-10 flex items-center justify-center text-center">
+          <h1>{title}</h1>
+        </div>
+      </div>
     </div>
   );
 }

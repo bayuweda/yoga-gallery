@@ -20,6 +20,7 @@ const navigation = [
   { name: "LAYANAN", href: "#", current: false },
   { name: "HARGA", href: "#", current: false },
   { name: "BANTUAN", href: "#", current: false },
+  { name: "GALLERY", href: "/Gallery", current: false },
 ];
 
 function classNames(...classes) {
@@ -139,16 +140,18 @@ export default function Navbar() {
             </DisclosureButton>
           </div>
 
-          <div className="flex ml-24 lg:ml-0 shrink-0 gap-2 items-center">
-            <img
-              alt="Your Company"
-              src="/assets/logo.png"
-              className="h-8 w-auto"
-            />
-            <h1 className="text-secondary lg:text-xl font-bold">
-              Yoga <span className="text-primary">Gallery</span>
-            </h1>
-          </div>
+          <a href="/">
+            <div className="flex ml-24 lg:ml-0 shrink-0 gap-2 items-center">
+              <img
+                alt="Your Company"
+                src="/assets/logo.png"
+                className="h-8 w-auto"
+              />
+              <h1 className="text-secondary lg:text-xl font-bold">
+                Yoga <span className="text-primary">Gallery</span>
+              </h1>
+            </div>
+          </a>
 
           <div className="hidden sm:ml-6 sm:block">
             <div className="flex space-x-4">

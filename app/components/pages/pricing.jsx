@@ -14,6 +14,9 @@ function PricingCard({ data, index }) {
     router.push(`/Pricing/${data.id}`); // Ganti 'id' dengan ID paket
   };
 
+  // Debugging untuk melihat data yang diterima
+  console.log("PricingCard Data", data);
+
   return (
     <motion.div
       ref={ref}
@@ -37,10 +40,9 @@ function PricingCard({ data, index }) {
       </div>
 
       <ul className="mt-4 text-sm text-secondary">
-        {Array.isArray(JSON.parse(data.includes)) &&
-          JSON.parse(data.includes).map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
+        {/* Hapus JSON.parse, cukup gunakan data.includes langsung */}
+        {Array.isArray(data.includes) &&
+          data.includes.map((item, index) => <li key={index}>{item}</li>)}
       </ul>
 
       <p className="mt-4 font-bold text-sm text-primary">Cocok untuk:</p>
@@ -66,7 +68,10 @@ export default function Pricing() {
       const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await fetch(`${API_URL}/packages`);
       const data = await response.json();
-      console.log("data price", data);
+
+      // Debugging untuk melihat data yang diterima dari API
+      console.log("Fetched Packages Data", data);
+
       setPackages(data);
     }
 
