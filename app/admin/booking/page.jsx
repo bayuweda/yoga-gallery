@@ -1,9 +1,12 @@
 "use client";
+
 import { useEffect, useState } from "react";
 
 export default function BookingPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [whatsappLink, setWhatsappLink] = useState(""); // Menyimpan link WhatsApp
+  const [showModal, setShowModal] = useState(false); // Menyimpan status modal
 
   const fetchBookings = () => {
     fetch("http://localhost:8000/api/bookings")
@@ -16,6 +19,41 @@ export default function BookingPage() {
         console.error("Error fetching bookings:", err);
         setLoading(false);
       });
+  };
+
+  const markAsCompleted = async (id) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8000/api/booking/${id}/complete`,
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        alert("Booking ditandai sebagai selesai.");
+
+        // Menampilkan link WhatsApp untuk review
+        const reviewLink = data.whatsapp_link;
+        if (reviewLink) {
+          setWhatsappLink(reviewLink); // Set link WhatsApp yang diterima
+          setShowModal(true); // Menampilkan modal
+        }
+
+        // Refresh data booking
+        fetchBookings();
+      } else {
+        alert(data.message || "Terjadi kesalahan.");
+      }
+    } catch (error) {
+      console.error("Error marking booking as completed:", error);
+    }
+  };
+
+  const closeModal = () => {
+    setShowModal(false); // Menutup modal
+    setWhatsappLink(""); // Menghapus link WhatsApp
   };
 
   useEffect(() => {
@@ -42,6 +80,7 @@ export default function BookingPage() {
                 <th className="px-4 py-3">Alamat</th>
                 <th className="px-4 py-3">Keperluan</th>
                 <th className="px-4 py-3">Paket</th>
+                <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Aksi</th>
               </tr>
             </thead>
@@ -72,7 +111,10 @@ export default function BookingPage() {
                         : JSON.parse(booking.purposes || "[]").join(", ")}
                     </td>
                     <td className="px-4 py-3">{booking.package_id}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 capitalize">
+                      {booking.status || "pending"}
+                    </td>
+                    <td className="px-4 py-3 space-x-2">
                       <a
                         href={waLink}
                         target="_blank"
@@ -81,12 +123,48 @@ export default function BookingPage() {
                       >
                         Kirim WA
                       </a>
+
+                      {booking.status !== "completed" && (
+                        <button
+                          onClick={() => markAsCompleted(booking.id)}
+                          className="text-blue-600 hover:underline ml-2"
+                        >
+                          Tandai Selesai
+                        </button>
+                      )}
                     </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* Modal untuk menampilkan link WhatsApp */}
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
+            <h3 className="text-xl font-semibold mb-4">Terima Kasih!</h3>
+            <p>
+              Booking berhasil ditandai sebagai selesai. Klik link di bawah
+              untuk memberikan review:
+            </p>
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline mt-4 inline-block"
+            >
+              Klik di sini untuk memberikan review
+            </a>
+            <button
+              onClick={closeModal}
+              className="mt-4 text-red-500 hover:underline"
+            >
+              Tutup
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -1,44 +1,20 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import React, { useRef } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Autoplay } from "swiper/modules";
 
-// Data testimoni
-const testimonials = [
-  {
-    name: "Yoga Gallery",
-    rating: 5,
-    description:
-      "Pengalaman yang luar biasa! Foto-fotonya sangat berkualitas dan team-nya profesional.",
-  },
-  {
-    name: "Budi Santoso",
-    rating: 4,
-    description:
-      "Paket fotografi yang sangat memuaskan, hasilnya sangat memuaskan, meskipun sedikit terlambat.",
-  },
-  {
-    name: "Lisa Maulana",
-    rating: 5,
-    description:
-      "Sangat direkomendasikan! Fotografernya sangat sabar dan hasil fotonya luar biasa.",
-  },
-];
-
-// Komponen untuk setiap kartu testimoni
-function TestimoniCard({ name, rating, description }) {
+function TestimoniCard({ name, rating, comment }) {
   return (
-    <div className="rounded-lg p-6 shadow-lg flex flex-col w-96 gap-8 text-center">
+    <div className="rounded-lg p-6 shadow-lg flex flex-col w-96 gap-8 text-center ">
       <div className="flex justify-center mb-2">
         {Array.from({ length: rating }, (_, i) => (
           <FaStar key={i} className="text-yellow-500" />
         ))}
       </div>
-
-      <p className="text-secondary text-sm lg:text-base mt-2">{description}</p>
+      <p className="text-secondary text-sm lg:text-base mt-2">{comment}</p>
       <h3 className="font-semibold text-primary uppercase tracking-wider lg:text-lg">
         {name}
       </h3>
@@ -46,43 +22,52 @@ function TestimoniCard({ name, rating, description }) {
   );
 }
 
-// Komponen utama Testimoni
 export default function Testimoni() {
-  // Membuat referensi untuk Swiper
   const swiperRef = useRef(null);
+  const [testimonials, setTestimonials] = useState([]);
+
+  useEffect(() => {
+    async function fetchTestimonials() {
+      try {
+        const res = await fetch("http://localhost:8000/api/reviews");
+        const data = await res.json();
+        setTestimonials(data);
+      } catch (error) {
+        console.error("Gagal memuat testimoni:", error);
+      }
+    }
+
+    fetchTestimonials();
+  }, []);
 
   return (
-    <section className="bg-[url('/assets/bg-testimoni.png')] bg-no-repeat  lg:h-auto py-8 flex flex-col items-center justify-center bg-cover w-full px-6">
-      <div className=" ">
-        <img src="/assets/“.png" alt="" />
+    <section className="bg-[url('/assets/bg-testimoni.png')] bg-no-repeat lg:h-auto py-8 flex flex-col items-center justify-center bg-cover w-full px-6">
+      <div>
+        <img src="/assets/“.png" alt="quote" />
       </div>
 
-      {/* Swiper Wrapper */}
-      <div className="w-96 ">
-        {" "}
-        {/* Tambahkan mx-auto untuk centering */}
+      <div className="w-96">
         <Swiper
           ref={swiperRef}
-          spaceBetween={30} // Jarak antar kartu testimoni
-          slidesPerView={1} // Menampilkan 1 testimoni per slide
-          loop={true} // Looping otomatis
-          navigation={false} // Nonaktifkan navigasi default
-          pagination={{ clickable: true }} // Pagination untuk indikator slide
+          spaceBetween={30}
+          slidesPerView={1}
+          loop={true}
+          navigation={false}
+          pagination={{ clickable: true }}
           modules={[Autoplay]}
+          autoplay={{ delay: 3000 }}
         >
-          {testimonials.map((testimonial, index) => (
+          {testimonials.map((item, index) => (
             <SwiperSlide key={index}>
               <TestimoniCard
-                name={testimonial.name}
-                rating={testimonial.rating}
-                description={testimonial.description}
+                name={item.name}
+                rating={item.rating}
+                comment={item.comment}
               />
             </SwiperSlide>
           ))}
         </Swiper>
       </div>
-
-      {/* Tombol Prev dan Next */}
     </section>
   );
 }
