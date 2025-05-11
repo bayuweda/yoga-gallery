@@ -42,30 +42,49 @@ export default function BookingPage() {
                 <th className="px-4 py-3">Alamat</th>
                 <th className="px-4 py-3">Keperluan</th>
                 <th className="px-4 py-3">Paket</th>
+                <th className="px-4 py-3">Aksi</th>
               </tr>
             </thead>
             <tbody className="text-gray-700 text-sm">
-              {bookings.map((booking) => (
-                <tr
-                  key={booking.id}
-                  className="border-t hover:bg-gray-50 transition"
-                >
-                  <td className="px-4 py-3">{booking.name}</td>
-                  <td className="px-4 py-3">{booking.email}</td>
-                  <td className="px-4 py-3">{booking.phone}</td>
-                  <td className="px-4 py-3">{booking.date}</td>
-                  <td className="px-4 py-3">
-                    {booking.start_time} - {booking.end_time}
-                  </td>
-                  <td className="px-4 py-3">{booking.address}</td>
-                  <td className="px-4 py-3">
-                    {Array.isArray(booking.purposes)
-                      ? booking.purposes.join(", ")
-                      : JSON.parse(booking.purposes || "[]").join(", ")}
-                  </td>
-                  <td className="px-4 py-3">{booking.package_id}</td>
-                </tr>
-              ))}
+              {bookings.map((booking) => {
+                const phoneWithCode = booking.phone.replace(/^0/, "62");
+                const message = `Halo ${booking.name}, ini dari Yoga Gallery. Booking Anda pada tanggal ${booking.date} pukul ${booking.start_time} sudah kami terima. Terima kasih telah memesan jasa kami!`;
+                const waLink = `https://wa.me/${phoneWithCode}?text=${encodeURIComponent(
+                  message
+                )}`;
+
+                return (
+                  <tr
+                    key={booking.id}
+                    className="border-t hover:bg-gray-50 transition"
+                  >
+                    <td className="px-4 py-3">{booking.name}</td>
+                    <td className="px-4 py-3">{booking.email}</td>
+                    <td className="px-4 py-3">{booking.phone}</td>
+                    <td className="px-4 py-3">{booking.date}</td>
+                    <td className="px-4 py-3">
+                      {booking.start_time} - {booking.end_time}
+                    </td>
+                    <td className="px-4 py-3">{booking.address}</td>
+                    <td className="px-4 py-3">
+                      {Array.isArray(booking.purposes)
+                        ? booking.purposes.join(", ")
+                        : JSON.parse(booking.purposes || "[]").join(", ")}
+                    </td>
+                    <td className="px-4 py-3">{booking.package_id}</td>
+                    <td className="px-4 py-3">
+                      <a
+                        href={waLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-green-600 hover:underline"
+                      >
+                        Kirim WA
+                      </a>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

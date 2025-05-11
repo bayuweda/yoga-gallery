@@ -200,181 +200,177 @@ function PackageDetail({ id }) {
 
   return (
     <>
-      <section className="mt-24 font-cinzel">
-        <div className="relative p-5 bg-[url('/assets/bg-packagedetail.png')] bg-cover bg-center w-full h-[400px]">
-          <div className="absolute inset-0 backdrop-blur-lg p-10 bg-black/40"></div>
-          <div className="relative z-10 border h-full border-primary">
-            <div className="p-4 text-center">
-              <h1 className="lg:text-3xl font-cinzel mb-14 text-primary font-bold">
-                HALLO SELAMAT DATANG DI HALAMAN BOOKING
-              </h1>
-              <div className="flex flex-col justify-center gap-4">
-                <h1 className="uppercase border text-center mx-auto border-primary text-primary text-2xl w-64">
-                  PAKET {packageData.name}
+      <section className="mt-24 bg-white">
+        {/* Section Header */}
+        <section className="  font-cinzel">
+          <div className="relative bg-[url('/assets/bg-packagedetail.png')] bg-cover bg-center w-full h-[400px'] p-5">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
+            <div className="relative py-10 z-10 border border-primary h-full flex items-center justify-center">
+              <div className="text-center space-y-6">
+                <h1 className="text-3xl text-primary font-bold">
+                  HALLO SELAMAT DATANG DI HALAMAN BOOKING
                 </h1>
-                <h1 className="text-secondary font-bold font-jost text-xl">
-                  Rp {packageData.price.toLocaleString("id-ID")}
-                </h1>
-                <h2 className="text-yellow-500 uppercase lg:text-xl lg:w-96 px-2 mx-auto">
-                  {packageData.suitable_for}
-                </h2>
+                <div className="space-y-2">
+                  <h2 className="uppercase border border-primary w-64 mx-auto text-primary text-2xl">
+                    PAKET {packageData.name}
+                  </h2>
+                  <p className="text-secondary font-jost font-semibold text-xl">
+                    Rp {packageData.price.toLocaleString("id-ID")}
+                  </p>
+                  <p className="text-yellow-400 uppercase text-lg max-w-md mx-auto">
+                    {packageData.suitable_for}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="mt-24 lg:mx-6 font-jost flex flex-col items-center justify-center bg-black text-white p-4">
-          <h1 className="text-xl font-bold mb-2">
-            SILAHKAN PILIH TUJUAN PEMESANANMU
-          </h1>
-          <p className="text-sm text-gray-400 mb-4">
-            kamu bisa memilih lebih dari 1
+        {/* Section: Purpose Selection */}
+        <section className="mt-24 px-4 font-jost text-black  text-center">
+          <h2 className="text-2xl font-bold mb-2">
+            Silahkan pilih tujuan pemesananmu
+          </h2>
+          <p className="text-sm text-gray-400 mb-6">
+            Kamu bisa memilih lebih dari 1
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             {purposes.map((purpose) => (
               <button
                 key={purpose}
                 onClick={() => toggleSelection(purpose)}
-                className={`lg:px-4 lg:py-2 text-[10px] lg:text-sm px-2 py-1 rounded border border-primary transition-all 
-          ${
-            selected.includes(purpose)
-              ? "bg-primary text-secondary"
-              : "bg-transparent text-secondary"
-          }`}
+                className={`px-4 py-2 text-sm rounded border border-primary transition-all ${
+                  selected.includes(purpose)
+                    ? "bg-primary text-black"
+                    : "bg-transparent text-black"
+                }`}
               >
                 {purpose}
               </button>
             ))}
           </div>
-        </div>
+        </section>
 
-        <div className="min-h-screen flex flex-col items-center justify-center p-6">
-          <form
-            onSubmit={handleSubmit}
-            className="w-full text-secondary font-jost max-w-3xl space-y-6"
-          >
-            <div>
-              <h2 className="text-xl font-semibold text-center mb-4">
-                When and where is the photoshoot?
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* Section: Booking Form */}
+        <section className="py-16 px-6 bg-white text-gray-800 font-jost">
+          <div className="max-w-3xl mx-auto">
+            <h2 className="text-center text-2xl font-bold mb-10">
+              Kapan dan di mana photoshootnya?
+            </h2>
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Form Group 1: Date & Time */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Select date
+                  <label className="block mb-1 font-semibold">
+                    Pilih Tanggal
                   </label>
                   <input
                     type="date"
                     name="date"
                     value={formData.date}
                     onChange={handleChange}
-                    className="w-full border text-gray-700 border-yellow-500 rounded p-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-full border border-yellow-500 rounded p-2 focus:ring-2 focus:ring-yellow-500"
                   />
                 </div>
-
-                <div className="text-gray-700">
+                <div>
+                  <label className="block mb-1 font-semibold">Jam</label>
                   {availableTimes.length > 0 ? (
                     <select
                       name="time"
                       value={formData.time}
                       onChange={handleChange}
-                      className="mt-1 block w-full rounded-xl border-gray-300 shadow-sm focus:ring-primary focus:border-primary p-2"
+                      className="w-full border border-yellow-500 rounded p-2"
                     >
-                      <option value="">Pilih Jam</option>
-                      {availableTimes.map((startTime, index) => {
-                        const endTime = calculateEndTime(startTime);
-                        return (
-                          <option
-                            className="text-gray-700"
-                            key={index}
-                            value={startTime}
-                          >
-                            {`${removeSeconds(startTime)} - ${removeSeconds(
-                              endTime
-                            )}`}
-                          </option>
-                        );
-                      })}
+                      {availableTimes.map((time) => (
+                        <option key={time} value={time}>
+                          {removeSeconds(time)} -{" "}
+                          {removeSeconds(calculateEndTime(time))}
+                        </option>
+                      ))}
                     </select>
                   ) : (
-                    <p className="text-sm text-red-500 mt-2">
-                      Tidak ada jam yang tersedia untuk tanggal ini.
+                    <p className="text-sm text-gray-500">
+                      Pilih tanggal terlebih dahulu
                     </p>
                   )}
                 </div>
-
-                <div className="text-gray-700">
-                  <label className="block text-sm font-medium mb-1">
-                    Address
-                  </label>
+                <div>
+                  <label className="block mb-1 font-semibold">Durasi</label>
                   <input
-                    type="text"
-                    name="address"
-                    placeholder="Enter the location address"
-                    value={formData.address}
+                    type="number"
+                    name="duration"
+                    value={formData.duration}
                     onChange={handleChange}
-                    className="w-full border mb-28 border-yellow-500 rounded p-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    min={1}
+                    className="w-full border border-yellow-500 rounded p-2"
                   />
                 </div>
               </div>
-            </div>
 
-            <div>
-              <h2 className="text-xl font-semibold text-center mb-4">
-                Kindly provide your contact details
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Form Group 2: Personal Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium mb-1">Name</label>
+                  <label className="block mb-1 font-semibold">
+                    Nama Lengkap
+                  </label>
                   <input
                     type="text"
                     name="name"
-                    placeholder="Enter full name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full border border-yellow-500 rounded p-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-full border border-yellow-500 rounded p-2"
                   />
                 </div>
-
                 <div>
-                  <label className="block text-sm text-yellow-400 font-medium mb-1">
-                    Phone number
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    placeholder="Enter phone number"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className="w-full border text-yellow-400 border-yellow-500 rounded p-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    Email
-                  </label>
+                  <label className="block mb-1 font-semibold">Email</label>
                   <input
                     type="email"
                     name="email"
-                    placeholder="Enter email address"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full border border-yellow-500 rounded p-2 focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    className="w-full border border-yellow-500 rounded p-2"
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 font-semibold">
+                    No. Telepon
+                  </label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full border border-yellow-500 rounded p-2"
+                  />
+                </div>
+                <div>
+                  <label className="block mb-1 font-semibold">Alamat</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    className="w-full border border-yellow-500 rounded p-2"
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="text-center">
-              <button
-                type="submit"
-                className="px-6 py-2 bg-yellow-500 text-black rounded hover:bg-yellow-600 transition"
-              >
-                Submit
-              </button>
-            </div>
-          </form>
-        </div>
+              {/* Submit */}
+              {error && (
+                <div className="text-red-500 text-sm text-center">{error}</div>
+              )}
+              <div className="text-center">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-primary text-black px-6 py-2 rounded font-semibold hover:bg-yellow-400 transition"
+                >
+                  {isSubmitting ? "Memproses..." : "Booking Sekarang"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
       </section>
     </>
   );
@@ -385,9 +381,11 @@ export default function PackageDetailPage({ params }) {
   const id = resolvedParams?.id;
   return (
     <>
-      <Navbar />
-      <PackageDetail id={id} />
-      <Footer />
+      <section className="bg-white">
+        <Navbar />
+        <PackageDetail id={id} />
+        <Footer />
+      </section>
     </>
   );
 }

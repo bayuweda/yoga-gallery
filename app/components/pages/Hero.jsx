@@ -19,7 +19,10 @@ export default function Hero() {
   };
 
   return (
-    <section className="w-full font-cinzel flex justify-end h-[70%] lg:h-[100%]">
+    <section
+      id="hero"
+      className="w-full font-cinzel flex justify-end h-[70%] lg:h-[100%]"
+    >
       <div className="lg:w-1/2 lg:px-24 px-8 flex gap-4 flex-col justify-center">
         <motion.h1
           initial="hidden"
@@ -65,46 +68,48 @@ export default function Hero() {
           }}
           className=""
         >
-          <button className="border-primary font-playfair text-[9px] hover:bg-primary px-2 hover:text-secondary border  py-2 rounded-md text-sm text-primary">
-            {[
-              "B",
-              "O",
-              "O",
-              "K",
-              "I",
-              "N",
-              "G",
-              " ",
-              "S",
-              "E",
-              "K",
-              "A",
-              "R",
-              "A",
-              "N",
-              "G",
-            ].map((letter, index) => (
-              <motion.span
-                key={index}
-                initial={{ opacity: 0, y: -20 }}
-                animate={
-                  isInView
-                    ? { opacity: 1, y: 0, rotate: Math.sin(index * 0.3) * 15 }
-                    : {}
-                }
-                transition={{
-                  duration: 0.5,
-                  delay: 2.5 + index * 0.05,
-                  type: "spring",
-                  stiffness: 100,
-                  damping: 10,
-                }}
-                style={{ display: "inline-block", marginRight: "2px" }}
-              >
-                {letter}
-              </motion.span>
-            ))}
-          </button>
+          <a href="#booking">
+            <button className="border-primary font-playfair text-[9px] hover:bg-primary px-2 hover:text-secondary border  py-2 rounded-md text-sm text-primary">
+              {[
+                "B",
+                "O",
+                "O",
+                "K",
+                "I",
+                "N",
+                "G",
+                " ",
+                "S",
+                "E",
+                "K",
+                "A",
+                "R",
+                "A",
+                "N",
+                "G",
+              ].map((letter, index) => (
+                <motion.span
+                  key={index}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={
+                    isInView
+                      ? { opacity: 1, y: 0, rotate: Math.sin(index * 0.3) * 15 }
+                      : {}
+                  }
+                  transition={{
+                    duration: 0.5,
+                    delay: 2.5 + index * 0.05,
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 10,
+                  }}
+                  style={{ display: "inline-block", marginRight: "2px" }}
+                >
+                  {letter}
+                </motion.span>
+              ))}
+            </button>
+          </a>
         </motion.div>
       </div>
     </section>

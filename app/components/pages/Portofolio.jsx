@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import DividerWithLogo from "../line/Line";
 
 const Gallery = {
   portrait: [
@@ -117,94 +118,97 @@ export default function Portofolio() {
   const displayedPhotos = showAll ? photos : photos.slice(0, 12); // toggle logic
 
   return (
-    <section className="w-full lg:mt-24">
-      <div className="w-full flex flex-col gap-7">
-        <div className="mx-auto lg:w-[40%] px-4 text-center">
-          <h1 className="text-primary font-bold lg:text-3xl">
-            HASIL KARYA KAMI
-          </h1>
-          <p className="text-secondary lg:text-base text-sm mt-4 font-Playfair">
-            Portofolio ini adalah bukti dari dedikasi kami dalam menghasilkan
-            fotografi berkualitas tinggi. Jelajahi karya kami dan temukan
-            bagaimana kami mengabadikan momen berharga.
-          </p>
-        </div>
+    <>
+      <section className="w-full lg:mt-24">
+        <div className="w-full flex flex-col gap-7">
+          <div className="mx-auto lg:w-[40%] px-4 text-center">
+            <h1 className="text-primary font-bold lg:text-3xl">
+              HASIL KARYA KAMI
+            </h1>
+            <p className="text-secondary lg:text-base text-sm mt-4 font-Playfair">
+              Portofolio ini adalah bukti dari dedikasi kami dalam menghasilkan
+              fotografi berkualitas tinggi. Jelajahi karya kami dan temukan
+              bagaimana kami mengabadikan momen berharga.
+            </p>
+          </div>
 
-        <div className="w-full flex justify-center gap-5 lg:gap-10 font-Jost mt-4 flex-wrap">
-          {["semua", "portrait", "personal", "family"].map((category) => (
-            <button
-              key={category}
-              onClick={() => handleCategoryChange(category)}
-              className={`text-base transition duration-200 ${
-                selectedCategory === category
-                  ? "text-white bg-primary px-4 py-1 rounded"
-                  : "text-primary"
-              }`}
-            >
-              {category.toUpperCase()}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="w-[90%] mt-7 mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-        {displayedPhotos.length > 0 ? (
-          displayedPhotos.map((foto, index) => (
-            <GalleryCard
-              key={index}
-              src={foto}
-              colSpan={
-                selectedCategory === "semua" && (index === 0 || index === 1)
-                  ? "2"
-                  : "1"
-              }
-              onClick={() => handleImageClick(foto)}
-            />
-          ))
-        ) : (
-          <p className="text-center col-span-4 text-secondary mt-10">
-            Tidak ada foto dalam kategori ini.
-          </p>
-        )}
-      </div>
-
-      {/* Toggle Button */}
-      {photos.length > 10 && (
-        <div className="w-full flex justify-center mt-5">
-          <button
-            onClick={() => setShowAll(!showAll)}
-            className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-80 transition"
-          >
-            {showAll ? "Tampilkan Sedikit" : "Tampilkan Semua"}
-          </button>
-        </div>
-      )}
-
-      {/* Modal */}
-      {modalImage && (
-        <div
-          className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center"
-          onClick={closeModal}
-        >
-          <div
-            className="relative w-[90%] md:w-[60%] aspect-[4/3]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={`/${modalImage}`}
-              alt="Preview"
-              fill
-              className="object-contain rounded-md"
-            />
-            <button
-              className="absolute top-2 right-2 text-white text-2xl"
-              onClick={closeModal}
-            >
-              &times;
-            </button>
+          <div className="w-full flex justify-center gap-5 lg:gap-10 font-Jost mt-4 flex-wrap">
+            {["semua", "portrait", "personal", "family"].map((category) => (
+              <button
+                key={category}
+                onClick={() => handleCategoryChange(category)}
+                className={`text-base transition duration-200 ${
+                  selectedCategory === category
+                    ? "text-white bg-primary px-4 py-1 rounded"
+                    : "text-primary"
+                }`}
+              >
+                {category.toUpperCase()}
+              </button>
+            ))}
           </div>
         </div>
-      )}
-    </section>
+
+        <div className="w-[90%] mt-7 mx-auto grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+          {displayedPhotos.length > 0 ? (
+            displayedPhotos.map((foto, index) => (
+              <GalleryCard
+                key={index}
+                src={foto}
+                colSpan={
+                  selectedCategory === "semua" && (index === 0 || index === 1)
+                    ? "2"
+                    : "1"
+                }
+                onClick={() => handleImageClick(foto)}
+              />
+            ))
+          ) : (
+            <p className="text-center col-span-4 text-secondary mt-10">
+              Tidak ada foto dalam kategori ini.
+            </p>
+          )}
+        </div>
+
+        {/* Toggle Button */}
+        {photos.length > 10 && (
+          <div className="w-full flex justify-center mt-5">
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="px-4 py-2 bg-primary text-white rounded hover:bg-opacity-80 transition"
+            >
+              {showAll ? "Tampilkan Sedikit" : "Tampilkan Semua"}
+            </button>
+          </div>
+        )}
+
+        {/* Modal */}
+        {modalImage && (
+          <div
+            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center"
+            onClick={closeModal}
+          >
+            <div
+              className="relative w-[90%] md:w-[60%] aspect-[4/3]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={`/${modalImage}`}
+                alt="Preview"
+                fill
+                className="object-contain rounded-md"
+              />
+              <button
+                className="absolute top-2 right-2 text-white text-2xl"
+                onClick={closeModal}
+              >
+                &times;
+              </button>
+            </div>
+          </div>
+        )}
+      </section>
+      <DividerWithLogo logoSrc="assets/logo.png" altText="Logo" />
+    </>
   );
 }

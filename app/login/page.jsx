@@ -27,12 +27,21 @@ export default function Login() {
       // Simpan token ke cookies
       Cookies.set("jwt", response.data.access_token, { expires: 7 });
 
+      // Simpan role ke cookies
+      Cookies.set("role", response.data.role, { expires: 7 });
+
       // Tampilkan modal sukses
       setIsSuccessOpen(true);
 
       setTimeout(() => {
         setIsSuccessOpen(false);
-        router.push("/");
+
+        // Arahkan berdasarkan role
+        if (response.data.role === "owner") {
+          router.push("/admin/dashboard"); // Arahkan ke dashboard admin
+        } else {
+          router.push("/"); // Arahkan ke dashboard pengguna
+        }
       }, 2000);
     } catch (error) {
       console.error("Login failed:", error);

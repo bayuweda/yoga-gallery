@@ -1,4 +1,5 @@
 "use client";
+import DividerWithLogo from "../line/Line";
 
 // Data untuk Service
 // Data untuk Service
@@ -98,6 +99,7 @@ export default function Service() {
           ))}
         </Swiper>
       </section>
+      <DividerWithLogo logoSrc="assets/logo.png" altText="Logo" />
     </>
   );
 }

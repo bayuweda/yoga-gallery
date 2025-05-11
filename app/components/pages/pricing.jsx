@@ -80,7 +80,10 @@ export default function Pricing() {
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-4 mb-48 gap-6 mt-24 mx-6">
+      <div
+        id="booking"
+        className="grid grid-cols-1 lg:grid-cols-4 mb-48 gap-6 mt-24 mx-6"
+      >
         <div className="flex-col font-cinzel gap-4 flex">
           <h1 className="text-primary text-xl font-bold lg:text-3xl">
             Temukan Paket yang Sesuai untuk Momen Anda
