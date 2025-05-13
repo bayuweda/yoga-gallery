@@ -29,24 +29,24 @@ function PackageDetail({ id }) {
   console.log(formData);
 
   const purposes = [
-    "Engagement",
-    "Business event",
-    "Wedding",
-    "Birthday",
-    "Maternity",
-    "Graduation",
-    "Product",
-    "Honeymoon",
+    "Pertunangan",
+    "Acara Bisnis",
+    "Pernikahan",
+    "Ulang Tahun",
+    "Kehamilan",
+    "Wisuda",
+    "Produk",
+    "Bulan Madu",
     "Fashion",
-    "Anniversary",
-    "Food",
-    "Conference",
-    "Team and workspace",
-    "Personal Portrait",
-    "Family",
-    "Travel shoot",
-    "Baby",
-    "Others",
+    "Hari Jadi",
+    "Makanan",
+    "Konferensi",
+    "Tim dan Ruang Kerja",
+    "Potret Pribadi",
+    "Keluarga",
+    "Pemotretan Perjalanan",
+    "Bayi",
+    "Lainnya",
   ];
 
   const toggleSelection = (purpose) => {
@@ -303,6 +303,7 @@ function PackageDetail({ id }) {
                     onChange={handleChange}
                     min={1}
                     className="w-full border border-yellow-500 rounded p-2"
+                    disabled
                   />
                 </div>
               </div>
@@ -316,6 +317,7 @@ function PackageDetail({ id }) {
                   <input
                     type="text"
                     name="name"
+                    placeholder="jhon doe"
                     value={formData.name}
                     onChange={handleChange}
                     className="w-full border border-yellow-500 rounded p-2"
@@ -326,6 +328,7 @@ function PackageDetail({ id }) {
                   <input
                     type="email"
                     name="email"
+                    placeholder="yogagallery@gmail.com"
                     value={formData.email}
                     onChange={handleChange}
                     className="w-full border border-yellow-500 rounded p-2"
@@ -333,21 +336,25 @@ function PackageDetail({ id }) {
                 </div>
                 <div>
                   <label className="block mb-1 font-semibold">
-                    No. Telepon
+                    No. Telepon (WA)
                   </label>
                   <input
                     type="text"
                     name="phone"
+                    placeholder="085847******"
                     value={formData.phone}
                     onChange={handleChange}
                     className="w-full border border-yellow-500 rounded p-2"
                   />
                 </div>
                 <div>
-                  <label className="block mb-1 font-semibold">Alamat</label>
+                  <label className="block mb-1 font-semibold">
+                    Lokasi Tujuan
+                  </label>
                   <input
                     type="text"
                     name="address"
+                    placeholder="pantai sanur"
                     value={formData.address}
                     onChange={handleChange}
                     className="w-full border border-yellow-500 rounded p-2"

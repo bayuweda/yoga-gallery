@@ -4,19 +4,19 @@ import DividerWithLogo from "../line/Line";
 const photographers = [
   {
     id: 1,
-    name: "Yoga Putra",
-    age: 28,
+    name: "Yoga Mahardika",
+    age: 26,
     photo: "assets/gallery/personal/foto  (1).JPG",
     specialty: "Wedding Photography",
-    location: "Denpasar, Bali",
+    location: "Petulu, Bali",
   },
   {
     id: 2,
-    name: "Ayu Lestari",
-    age: 25,
+    name: "Diki Mahendra",
+    age: 23,
     photo: "assets/gallery/personal/foto  (9).JPG",
     specialty: "Lifestyle & Fashion",
-    location: "Ubud, Bali",
+    location: "Tegallalang, Bali",
   },
 ];
 

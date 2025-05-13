@@ -17,9 +17,8 @@ import Modal from "../Modal/Modal";
 
 const navigation = [
   { name: "BERANDA", href: "/", current: true },
-  { name: "LAYANAN", href: "#", current: false },
-  { name: "HARGA", href: "#", current: false },
-  { name: "BANTUAN", href: "#", current: false },
+  { name: "LAYANAN", href: "#service", current: false },
+  { name: "HARGA", href: "#booking", current: false },
   { name: "GALLERY", href: "/Gallery", current: false },
 ];
 

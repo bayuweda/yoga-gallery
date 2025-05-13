@@ -60,6 +60,15 @@ export default function BookingPage() {
     fetchBookings();
   }, []);
 
+  const formatDate = (isoDateStr) => {
+    const tanggal = new Date(isoDateStr);
+    return tanggal.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+    });
+  };
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Manajemen Booking</h2>
@@ -100,7 +109,7 @@ export default function BookingPage() {
                     <td className="px-4 py-3">{booking.name}</td>
                     <td className="px-4 py-3">{booking.email}</td>
                     <td className="px-4 py-3">{booking.phone}</td>
-                    <td className="px-4 py-3">{booking.date}</td>
+                    <td className="px-4 py-3">{formatDate(booking.date)}</td>
                     <td className="px-4 py-3">
                       {booking.start_time} - {booking.end_time}
                     </td>
@@ -114,12 +123,12 @@ export default function BookingPage() {
                     <td className="px-4 py-3 capitalize">
                       {booking.status || "pending"}
                     </td>
-                    <td className="px-4 py-3 space-x-2">
+                    <td className="px-4 flex py-3 space-x-2">
                       <a
                         href={waLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-green-600 hover:underline"
+                        className="text-green-600 hover:underline whitespace-nowrap"
                       >
                         Kirim WA
                       </a>
@@ -127,9 +136,10 @@ export default function BookingPage() {
                       {booking.status !== "completed" && (
                         <button
                           onClick={() => markAsCompleted(booking.id)}
-                          className="text-blue-600 hover:underline ml-2"
+                          className="py-1 px-1 bg-white drop-shadow-lg"
+                          title="Tandai sebagai selesai"
                         >
-                          Tandai Selesai
+                          ✔️
                         </button>
                       )}
                     </td>
@@ -143,27 +153,47 @@ export default function BookingPage() {
 
       {/* Modal untuk menampilkan link WhatsApp */}
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full">
-            <h3 className="text-xl font-semibold mb-4">Terima Kasih!</h3>
-            <p>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="p-6 rounded-2xl shadow-xl bg-white max-w-sm w-full text-center">
+            <div className="flex justify-center mb-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="text-green-500 w-16 h-16"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-semibold mb-2 text-green-700">
+              Success!
+            </h2>
+            <p className="text-gray-700 mb-4">
               Booking berhasil ditandai sebagai selesai. Klik link di bawah
               untuk memberikan review:
             </p>
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 hover:underline mt-4 inline-block"
-            >
-              Klik di sini untuk memberikan review
-            </a>
-            <button
-              onClick={closeModal}
-              className="mt-4 text-red-500 hover:underline"
-            >
-              Tutup
-            </button>
+            <div className="flex items-center flex-col">
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:underline mt-2 inline-block whitespace-nowrap"
+              >
+                Klik di sini untuk memberikan review
+              </a>
+              <button
+                onClick={closeModal}
+                className=" w-24 mt-4 px-4 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition"
+              >
+                Tutup
+              </button>
+            </div>
           </div>
         </div>
       )}
