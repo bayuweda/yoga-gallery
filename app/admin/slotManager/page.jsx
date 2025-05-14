@@ -20,7 +20,6 @@ const SlotManager = () => {
           }`
         );
         const data = await response.json();
-        console.log("Fetched Slots:", data);
         setSlots(data);
       } catch (error) {
         console.error("Gagal mengambil slot:", error);
@@ -39,10 +38,7 @@ const SlotManager = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          date,
-          start_time: time,
-        }),
+        body: JSON.stringify({ date, start_time: time }),
       });
 
       const data = await response.json();
@@ -87,9 +83,38 @@ const SlotManager = () => {
     });
   };
 
+  const isSlotExpired = (date, time) => {
+    const slotDateTime = new Date(`${date}T${time}`);
+    return slotDateTime < new Date();
+  };
+
+  const handleGenerateWeekly = async () => {
+    try {
+      const res = await fetch(`${API_URL}/admin/appointments/generate-weekly`, {
+        method: "POST",
+      });
+
+      const data = await res.json();
+      alert(data.message || "Slot berhasil digenerate!");
+      setSelectedDate(""); // Refresh semua
+    } catch (err) {
+      console.error("Gagal generate:", err);
+      alert("Gagal generate slot mingguan.");
+    }
+  };
+
   return (
     <div className="p-6 bg-white rounded-xl shadow-md space-y-6">
       <h2 className="text-2xl font-bold">Manajemen Jadwal Fotografer</h2>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Manajemen Jadwal Fotografer</h2>
+        <button
+          onClick={handleGenerateWeekly}
+          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
+        >
+          Generate Slot Mingguan
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <input
@@ -139,29 +164,42 @@ const SlotManager = () => {
               </td>
             </tr>
           ) : (
-            slots.map((slot) => (
-              <tr key={slot.id} className="border-t">
-                <td className="p-2">{formatDate(slot.date)}</td>
-                <td className="p-2">{slot.start_time}</td>
-                <td className="p-2">
-                  {slot.is_booked ? (
-                    <span className="text-red-600">Sudah dibooking</span>
-                  ) : (
-                    <span className="text-green-600">Tersedia</span>
-                  )}
-                </td>
-                <td className="p-2">
-                  {!slot.is_booked && (
-                    <button
-                      onClick={() => handleDeleteSlot(slot.id)}
-                      className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
-                    >
-                      Hapus
-                    </button>
-                  )}
-                </td>
-              </tr>
-            ))
+            slots.map((slot) => {
+              const expired = isSlotExpired(slot.date, slot.start_time);
+              return (
+                <tr key={slot.id} className="border-t">
+                  <td className="p-2">{formatDate(slot.date)}</td>
+                  <td className="p-2">{slot.start_time}</td>
+                  <td className="p-2">
+                    {expired ? (
+                      <span className="text-gray-500">Kadaluwarsa</span>
+                    ) : slot.is_booked ? (
+                      <span className="text-red-600">
+                        Sudah dibooking oleh {slot.booking?.name || "pengguna"}
+                        <div className="text-sm text-gray-600">
+                          {slot.booking?.phone && `📱 ${slot.booking.phone}`}{" "}
+                          <br />
+                          {slot.booking?.package_id &&
+                            `📦 Paket: ${slot.booking.package_id}`}
+                        </div>
+                      </span>
+                    ) : (
+                      <span className="text-green-600">Tersedia</span>
+                    )}
+                  </td>
+                  <td className="p-2">
+                    {!slot.is_booked && !expired && (
+                      <button
+                        onClick={() => handleDeleteSlot(slot.id)}
+                        className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
+                      >
+                        Hapus
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })
           )}
         </tbody>
       </table>

@@ -274,23 +274,30 @@ function PackageDetail({ id }) {
                 </div>
                 <div>
                   <label className="block mb-1 font-semibold">Jam</label>
-                  {availableTimes.length > 0 ? (
-                    <select
-                      name="time"
-                      value={formData.time}
-                      onChange={handleChange}
-                      className="w-full border border-yellow-500 rounded p-2"
-                    >
-                      {availableTimes.map((time) => (
-                        <option key={time} value={time}>
-                          {removeSeconds(time)} -{" "}
-                          {removeSeconds(calculateEndTime(time))}
-                        </option>
-                      ))}
-                    </select>
+                  {formData.date ? (
+                    availableTimes.length > 0 ? (
+                      <select
+                        name="time"
+                        value={formData.time}
+                        onChange={handleChange}
+                        className="w-full border border-yellow-500 rounded p-2"
+                      >
+                        {availableTimes.map((time) => (
+                          <option key={time} value={time}>
+                            {removeSeconds(time)} -{" "}
+                            {removeSeconds(calculateEndTime(time))}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <p className="text-red-500 text-sm">
+                        Booking untuk tanggal ini belum tersedia. Silakan pilih
+                        tanggal lain.
+                      </p>
+                    )
                   ) : (
-                    <p className="text-sm text-gray-500">
-                      Pilih tanggal terlebih dahulu
+                    <p className="text-gray-500 text-sm">
+                      Silakan pilih tanggal terlebih dahulu.
                     </p>
                   )}
                 </div>

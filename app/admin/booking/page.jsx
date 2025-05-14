@@ -7,6 +7,7 @@ export default function BookingPage() {
   const [loading, setLoading] = useState(true);
   const [whatsappLink, setWhatsappLink] = useState(""); // Menyimpan link WhatsApp
   const [showModal, setShowModal] = useState(false); // Menyimpan status modal
+  const [filterStatus, setFilterStatus] = useState("all");
 
   const fetchBookings = () => {
     fetch("http://localhost:8000/api/bookings")
@@ -69,6 +70,28 @@ export default function BookingPage() {
     });
   };
 
+  const getStatusCounts = () => {
+    const counts = {
+      pending: 0,
+      approved: 0,
+      completed: 0,
+    };
+
+    bookings.forEach((b) => {
+      const status = b.status || "pending";
+      if (counts[status] !== undefined) {
+        counts[status]++;
+      }
+    });
+
+    return counts;
+  };
+  const statusCounts = getStatusCounts();
+  const filteredBookings =
+    filterStatus === "all"
+      ? bookings
+      : bookings.filter((b) => (b.status || "pending") === filterStatus);
+
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Manajemen Booking</h2>
@@ -78,6 +101,36 @@ export default function BookingPage() {
         <p>Tidak ada data booking.</p>
       ) : (
         <div className="overflow-x-auto">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            {/* Statistik */}
+            <div className="flex gap-4">
+              <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg shadow">
+                Pending: <strong>{statusCounts.pending}</strong>
+              </div>
+              <div className="bg-blue-100 text-blue-800 px-4 py-2 rounded-lg shadow">
+                Approved: <strong>{statusCounts.approved}</strong>
+              </div>
+              <div className="bg-green-100 text-green-800 px-4 py-2 rounded-lg shadow">
+                Completed: <strong>{statusCounts.completed}</strong>
+              </div>
+            </div>
+
+            {/* Dropdown filter */}
+            <div>
+              <label className="mr-2 font-medium">Filter Status:</label>
+              <select
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+                className="px-3 py-1 border border-gray-300 rounded"
+              >
+                <option value="all">Semua</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+
           <table className="min-w-full bg-white border border-gray-200 rounded shadow-md">
             <thead className="bg-gray-100 text-gray-700 text-sm">
               <tr>
@@ -94,7 +147,7 @@ export default function BookingPage() {
               </tr>
             </thead>
             <tbody className="text-gray-700 text-sm">
-              {bookings.map((booking) => {
+              {filteredBookings.map((booking) => {
                 const phoneWithCode = booking.phone.replace(/^0/, "62");
                 const message = `Halo ${booking.name}, ini dari Yoga Gallery. Booking Anda pada tanggal ${booking.date} pukul ${booking.start_time} sudah kami terima. Terima kasih telah memesan jasa kami!`;
                 const waLink = `https://wa.me/${phoneWithCode}?text=${encodeURIComponent(
@@ -125,23 +178,11 @@ export default function BookingPage() {
                     </td>
                     <td className="px-4 flex py-3 space-x-2">
                       <a
-                        href={waLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-green-600 hover:underline whitespace-nowrap"
+                        href={`/admin/booking/${booking.id}`}
+                        className="text-blue-600 hover:underline whitespace-nowrap"
                       >
-                        Kirim WA
+                        Lihat Detail
                       </a>
-
-                      {booking.status !== "completed" && (
-                        <button
-                          onClick={() => markAsCompleted(booking.id)}
-                          className="py-1 px-1 bg-white drop-shadow-lg"
-                          title="Tandai sebagai selesai"
-                        >
-                          ✔️
-                        </button>
-                      )}
                     </td>
                   </tr>
                 );

@@ -5,6 +5,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Navbar from "../components/pages/Navbar";
 import Footer from "../components/pages/Footer";
+import Link from "next/link";
 
 const Gallery = {
   portrait: [
@@ -159,14 +160,42 @@ function SectionGallery({ title, images }) {
 export default function OurGalleryPinterest() {
   return (
     <>
-      <Navbar />
-      <main className="w-full pt-20 pb-10">
-        <section className="drop-shadow-lg   ">
+      {/* Ikon Home di pojok kanan atas */}
+      <div className="fixed bottom-4 right-1 animate-pulse z-50">
+        <div className="group relative flex flex-col items-center">
+          {/* Tooltip di atas */}
+          <div className="mb-2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-all duration-200 pointer-events-none whitespace-nowrap">
+            Homepage
+          </div>
+
+          {/* Icon */}
+          <Link href="/">
+            <div className="bg-white p-2 rounded-lg  shadow-slate-600 shadow-md hover:shadow-md transition">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                className="size-6 text-primary hover:text-black transition cursor-pointer"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      <main className="w-full  pb-10">
+        <section className="drop-shadow-lg">
           <Image
             width={2000}
             height={2000}
             src="/assets/banner/banner.png"
-            className="w-full lg:h-[500px] "
+            className="w-full lg:h-[500px]"
+            alt="Banner"
           />
         </section>
 
