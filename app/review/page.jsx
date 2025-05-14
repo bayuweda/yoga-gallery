@@ -5,37 +5,57 @@ import { useSearchParams } from "next/navigation"; // untuk Next.js 13+ (app rou
 export default function ReviewForm() {
   const searchParams = useSearchParams();
   const bookingId = searchParams.get("booking_id");
+  const token = searchParams.get("token"); // Ambil token dari URL
 
   const [name, setName] = useState("");
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setMessage(""); // Clear previous messages
+    setLoading(true); // Set loading state
 
-    const response = await fetch("http://localhost:8000/api/reviews", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        booking_id: bookingId,
-        name,
-        rating,
-        comment,
-      }),
-    });
+    try {
+      const response = await fetch("http://localhost:8000/api/reviews", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          booking_id: bookingId,
+          name,
+          rating,
+          comment,
+          token,
+        }),
+      });
 
-    const data = await response.json();
+      const data = await response.json();
+      console.log(data); // Tambahkan ini untuk melihat data error
 
-    if (response.ok) {
-      setMessage("Review berhasil dikirim!");
-      setName("");
-      setRating(5);
-      setComment("");
-    } else {
-      setMessage(data.message || "Gagal mengirim review.");
+      setLoading(false); // Reset loading state
+
+      if (response.ok) {
+        setMessage("Review berhasil dikirim!");
+        setName("");
+        setRating(5);
+        setComment("");
+      } else {
+        if (response.status === 409) {
+          setMessage("Kamu sudah mengirim review untuk booking ini.");
+        } else if (data.errors) {
+          const messages = Object.values(data.errors).flat().join(" ");
+          setMessage(messages);
+        } else {
+          setMessage(data.message || "Gagal mengirim review.");
+        }
+      }
+    } catch (error) {
+      setLoading(false); // Reset loading state in case of error
+      setMessage("Terjadi kesalahan, coba lagi.");
     }
   };
 
@@ -88,8 +108,9 @@ export default function ReviewForm() {
       <button
         type="submit"
         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        disabled={loading} // Disable the button while loading
       >
-        Kirim Review
+        {loading ? "Mengirim..." : "Kirim Review"}
       </button>
     </form>
   );
