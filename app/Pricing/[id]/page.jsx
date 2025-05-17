@@ -114,16 +114,16 @@ function PackageDetail({ id }) {
       if (data.available) {
         const bookedTimes = data.bookedTimes || [];
 
-        // Ambil durasi dalam jam dari formData
+        // Durasi dalam jam, pastikan formData.duration sudah terisi
         const duration = Number(formData.duration || 1);
 
-        // Helper untuk konversi waktu "HH:mm:ss" ke menit
+        // Helper konversi waktu "HH:mm:ss" ke menit dari jam 00:00
         const timeToMinutes = (time) => {
           const [h, m, s] = time.split(":").map(Number);
           return h * 60 + m;
         };
 
-        // Helper untuk menambahkan jam ke waktu "HH:mm:ss"
+        // Helper menambahkan jam ke waktu "HH:mm:ss"
         const addHours = (time, hoursToAdd) => {
           const [h, m, s] = time.split(":").map(Number);
           const newH = h + hoursToAdd;
@@ -132,19 +132,27 @@ function PackageDetail({ id }) {
             .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
         };
 
-        // Filter waktu yang valid berdasarkan slot tersedia dan bookedTimes
-        const filtered = data.availableTimes.filter((startTime) => {
-          const endTime = addHours(startTime, duration);
-          const start = startTime.slice(0, 5); // "HH:mm"
-          const end = endTime.slice(0, 5);
+        // Ubah waktu-waktu tersedia ke dalam format HH:mm
+        const availableHHMM = data.availableTimes.map((t) => t.slice(0, 5));
 
-          // Validasi: seluruh slot waktu dari start hingga end harus tersedia
+        const filtered = data.availableTimes.filter((startTime) => {
+          const start = startTime.slice(0, 5); // "HH:mm"
+          const endTime = addHours(startTime, duration);
+          const end = endTime.slice(0, 5); // "HH:mm"
+
+          // 1. Pastikan semua jam dalam durasi tersedia (misalnya: 19:00 dan 20:00 untuk durasi 2 jam)
           for (let i = 0; i < duration; i++) {
-            const checkTime = addHours(startTime, i);
-            if (!data.availableTimes.includes(checkTime)) return false;
+            const slot = addHours(startTime, i).slice(0, 5);
+            if (!availableHHMM.includes(slot)) {
+              return false;
+            }
           }
 
-          // Validasi overlap dengan waktu yang sudah dibooking
+          // 2. Pastikan endTime tidak melewati jam terakhir dari availableTimes
+          const latestAvailable = availableHHMM[availableHHMM.length - 1];
+          if (end > latestAvailable) return false;
+
+          // 3. Cek apakah rentang waktu ini bertabrakan dengan waktu yang sudah dibooking
           for (let booked of bookedTimes) {
             const bookedStart = booked.start.slice(0, 5);
             const bookedEnd = addHours(booked.start, booked.duration).slice(
@@ -152,12 +160,11 @@ function PackageDetail({ id }) {
               5
             );
 
-            const isOverlapping =
+            if (
               (start >= bookedStart && start < bookedEnd) ||
               (end > bookedStart && end <= bookedEnd) ||
-              (bookedStart >= start && bookedStart < end);
-
-            if (isOverlapping) {
+              (bookedStart >= start && bookedStart < end)
+            ) {
               return false;
             }
           }
@@ -166,6 +173,7 @@ function PackageDetail({ id }) {
         });
 
         console.log("✅ Filtered Times Setelah Validasi Durasi:", filtered);
+
         setAvailableTimes(filtered);
       } else {
         setAvailableTimes([]);
