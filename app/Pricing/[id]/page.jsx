@@ -98,25 +98,78 @@ function PackageDetail({ id }) {
   const fetchAvailableTimes = async (selectedDate) => {
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-      // Use query parameters for GET request
       const response = await fetch(
         `${API_URL}/check-availability?date=${selectedDate}`,
         {
-          method: "GET", // GET method
+          method: "GET",
           headers: {
-            "Content-Type": "application/json", // This can be omitted for GET requests
+            "Content-Type": "application/json",
           },
         }
       );
 
       const data = await response.json();
-
-      console.log("Available Times Data:", data); // Check the data structure
+      console.log("Available Times Data:", data);
 
       if (data.available) {
-        setAvailableTimes(data.availableTimes); // Set available times
+        const bookedTimes = data.bookedTimes || [];
+
+        // Durasi dalam jam, pastikan formData.duration sudah terisi
+        const duration = Number(formData.duration || 1);
+
+        // Helper konversi waktu "HH:mm:ss" ke menit dari jam 00:00
+        const timeToMinutes = (time) => {
+          const [h, m, s] = time.split(":").map(Number);
+          return h * 60 + m;
+        };
+
+        // Helper menambahkan jam ke waktu "HH:mm:ss"
+        const addHours = (time, hoursToAdd) => {
+          const [h, m, s] = time.split(":").map(Number);
+          const newH = h + hoursToAdd; // jangan wrap around jam
+          return `${newH.toString().padStart(2, "0")}:${m
+            .toString()
+            .padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+        };
+
+        // Batas waktu operasional backend (misal jam 21:00)
+        const maxTime = "21:00:00";
+
+        // Filter waktu tersedia berdasarkan durasi dan bookedTimes
+        const filtered = data.availableTimes.filter((startTime) => {
+          const endTime = addHours(startTime, duration);
+
+          // Jika waktu selesai melewati batas maxTime, skip
+          if (timeToMinutes(endTime) > timeToMinutes(maxTime)) return false;
+
+          const start = startTime.slice(0, 5); // HH:mm
+          const end = endTime.slice(0, 5);
+
+          // Cek overlap dengan bookedTimes
+          for (let booked of bookedTimes) {
+            const bookedStart = booked.start.slice(0, 5);
+            const bookedEnd = addHours(booked.start, booked.duration).slice(
+              0,
+              5
+            );
+
+            if (
+              (start >= bookedStart && start < bookedEnd) ||
+              (end > bookedStart && end <= bookedEnd) ||
+              (bookedStart >= start && bookedStart < end)
+            ) {
+              return false;
+            }
+          }
+
+          return true;
+        });
+
+        console.log("✅ Filtered Times Setelah Validasi Durasi:", filtered);
+
+        setAvailableTimes(filtered);
       } else {
-        setAvailableTimes([]); // No available times
+        setAvailableTimes([]);
         setFormData((prev) => ({ ...prev, time: "" }));
       }
     } catch (err) {
@@ -175,7 +228,9 @@ function PackageDetail({ id }) {
 
   const calculateEndTime = (startTime) => {
     const [hours, minutes] = startTime.split(":").map(Number);
-    let endHours = hours + 1;
+    const duration = Number(formData.duration || 1);
+    let endHours = hours + duration;
+
     if (endHours >= 24) endHours -= 24;
 
     return `${endHours.toString().padStart(2, "0")}:${minutes

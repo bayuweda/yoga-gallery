@@ -149,7 +149,7 @@ export default function ServicePage() {
                 <td className="px-4 py-2">{pkg.total_photos}</td>
                 <td className="px-4 py-2">{pkg.edited_photos}</td>
                 <td className="px-4 py-2">{pkg.suitable_for}</td>
-                <td className="px-4 py-2 space-x-2">
+                <td className="px-4 py-2 flex space-x-2">
                   <button
                     onClick={() => handleEdit(pkg)}
                     className="px-3 py-1 bg-yellow-400 rounded"

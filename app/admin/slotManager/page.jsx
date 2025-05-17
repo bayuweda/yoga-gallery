@@ -10,6 +10,7 @@ const SlotManager = () => {
   const [time, setTime] = useState("");
   const [slots, setSlots] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
+  const [selectedWeek, setSelectedWeek] = useState("this");
 
   useEffect(() => {
     async function fetchSlots() {
@@ -88,15 +89,22 @@ const SlotManager = () => {
     return slotDateTime < new Date();
   };
 
+  // Tambahkan state untuk pilihan minggu
+
   const handleGenerateWeekly = async () => {
     try {
-      const res = await fetch(`${API_URL}/admin/appointments/generate-weekly`, {
-        method: "POST",
-      });
+      const res = await fetch(
+        `${API_URL}/admin/appointments/generate-weekly?week=${selectedWeek}`,
+        {
+          method: "POST",
+        }
+      );
 
       const data = await res.json();
+      console.log("tess data", data);
+
       alert(data.message || "Slot berhasil digenerate!");
-      setSelectedDate(""); // Refresh semua
+      setSelectedDate(""); // Refresh data
     } catch (err) {
       console.error("Gagal generate:", err);
       alert("Gagal generate slot mingguan.");
@@ -105,15 +113,27 @@ const SlotManager = () => {
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-md space-y-6">
-      <h2 className="text-2xl font-bold">Manajemen Jadwal Fotografer</h2>
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-2xl font-bold">Manajemen Jadwal Fotografer</h2>
-        <button
-          onClick={handleGenerateWeekly}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          Generate Slot Mingguan
-        </button>
+      <div className="flex flex-col md:flex-row gap-3 items-start md:items-center mb-4">
+        <h2 className="text-2xl font-bold flex-1">
+          Manajemen Jadwal Fotografer
+        </h2>
+
+        <div className="flex items-center gap-2">
+          <select
+            value={selectedWeek}
+            onChange={(e) => setSelectedWeek(e.target.value)}
+            className="border px-3 py-2 rounded text-sm"
+          >
+            <option value="this">Minggu Ini</option>
+            <option value="next">Minggu Depan</option>
+          </select>
+          <button
+            onClick={handleGenerateWeekly}
+            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
+          >
+            Generate Slot
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

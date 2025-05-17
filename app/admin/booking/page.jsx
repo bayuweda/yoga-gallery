@@ -174,8 +174,20 @@ export default function BookingPage() {
                     </td>
                     <td className="px-4 py-3">{booking.package_id}</td>
                     <td className="px-4 py-3 capitalize">
-                      {booking.status || "pending"}
+                      <span
+                        className={`px-3 py-1 rounded-lg text-sm font-medium shadow
+                        ${
+                          booking.status === "approved"
+                            ? "bg-blue-100 text-blue-800"
+                            : booking.status === "completed"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
+                        {booking.status || "pending"}
+                      </span>
                     </td>
+
                     <td className="px-4 flex py-3 space-x-2">
                       <a
                         href={`/admin/booking/${booking.id}`}

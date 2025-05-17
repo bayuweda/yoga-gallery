@@ -6,10 +6,25 @@ import { useParams, useRouter } from "next/navigation";
 export default function BookingDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-
+  const [packages, setPackages] = useState("");
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/api/packages");
+        if (!res.ok) throw new Error("Gagal mengambil data paket");
+        const data = await res.json();
+        setPackages(data);
+      } catch (err) {
+        console.error("Error fetching packages:", err);
+      }
+    };
+
+    fetchPackages();
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -121,7 +136,9 @@ export default function BookingDetailPage() {
               : JSON.parse(booking.purposes || "[]").join(", ")}
           </p>
           <p>
-            <strong>Paket:</strong> {booking.package_id}
+            <strong>Paket:</strong>{" "}
+            {packages.find((p) => p.id === booking.package_id)?.name ||
+              "Unknown Paket"}
           </p>
           <p>
             <strong>Status:</strong> {booking.status}
@@ -129,24 +146,30 @@ export default function BookingDetailPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <a
-            href={generateWhatsAppLink()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-          >
-            Kirim WhatsApp
-          </a>
+          {/* Tampilkan tombol WA dan Tandai Selesai hanya jika status bukan pending */}
+          {booking.status !== "pending" && (
+            <>
+              <a
+                href={generateWhatsAppLink()}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Kirim WhatsApp
+              </a>
 
-          {booking.status !== "completed" && (
-            <button
-              onClick={handleMarkAsCompleted}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-            >
-              Tandai Selesai
-            </button>
+              {booking.status !== "completed" && (
+                <button
+                  onClick={handleMarkAsCompleted}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Tandai Selesai
+                </button>
+              )}
+            </>
           )}
 
+          {/* Tampilkan tombol Approve hanya jika masih pending */}
           {booking.status === "pending" && (
             <button
               onClick={handleApprove}
