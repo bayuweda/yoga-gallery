@@ -1,90 +1,111 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { useState, useEffect } from "react";
-
+import { useRef, useState, useEffect } from "react";
+import { FaCamera, FaClock, FaFileAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
-function PricingCard({ data, index }) {
-  const router = useRouter();
+// Komponen Kartu Harga
+const PricingCard = ({ data, index }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
-  const goToPackageDetail = () => {
-    router.push(`/Pricing/${data.id}`); // Ganti 'id' dengan ID paket
-  };
+  const inView = useInView(ref, { once: true });
+  const router = useRouter();
 
-  // Debugging untuk melihat data yang diterima
-  console.log("PricingCard Data", data);
+  const goToPackageDetail = () => {
+    router.push(`/Pricing/${data.id}`); // Atur sesuai struktur rute kamu
+  };
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: 50 }} // Mulai dari kanan dan transparan
-      animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }} // Animasi hanya saat terlihat
-      transition={{ duration: 0.6, delay: index * 0.2 }} // Delay efek satu per satu
-      className="border mx-2 drop-shadow-sm shadow-primary lg:mx-0 border-primary rounded-lg p-6 shadow-md"
+      initial={{ opacity: 0, y: 50 }}
+      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{ duration: 0.6, delay: index * 0.2 }}
+      className="group relative mx-2 lg:mx-0 rounded-2xl p-6 border border-yellow-500
+                 bg-gradient-to-br from-zinc-900 via-black to-zinc-900 hover:scale-105
+                 hover:ring-2 hover:ring-yellow-500 transition-all duration-300 shadow-xl"
     >
+      {/* Badge Rekomendasi */}
+      {data.name?.toLowerCase().includes("premium") && (
+        <span className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-yellow-400 text-black px-3 py-1 text-xs font-bold rounded-full shadow-md">
+          Rekomendasi Kami
+        </span>
+      )}
+
+      {/* Judul & Harga */}
       <div className="text-center">
-        <h2 className="text-xl font-bold text-primary">{data.name}</h2>
-        <h1 className="text-2xl pb-4 font-semibold text-secondary mt-2">
+        <h2 className="text-2xl font-extrabold text-yellow-400">{data.name}</h2>
+        <h1 className="text-3xl font-bold text-white mt-2">
           Rp {data.price.toLocaleString("id-ID")}
         </h1>
       </div>
 
-      <div className="mt-4">
-        <p className="text-secondary">Durasi: {data.duration}</p>
-        <p className="text-secondary">
-          Jumlah Foto: {data.total_photos} (edit {data.edited_photos})
+      {/* Detail Fitur */}
+      <div className="mt-6 space-y-2 text-sm text-gray-300">
+        <p className="flex items-center gap-2">
+          <FaClock className="text-yellow-400" />
+          Durasi: {data.duration} Jam
+        </p>
+        <p className="flex items-center gap-2">
+          <FaCamera className="text-yellow-400" />
+          Semua Foto
+        </p>
+        <p className="flex items-center gap-2">
+          <FaFileAlt className="text-yellow-400" />
+          Edit {data.edited_photos} Foto
         </p>
       </div>
 
-      <ul className="mt-4 text-sm text-secondary">
-        {/* Hapus JSON.parse, cukup gunakan data.includes langsung */}
+      {/* Fitur Tambahan */}
+      <ul className="mt-4 text-sm text-gray-400 list-disc list-inside">
         {Array.isArray(data.includes) &&
-          data.includes.map((item, index) => <li key={index}>{item}</li>)}
+          data.includes.map((item, i) => <li key={i}>{item}</li>)}
       </ul>
 
-      <p className="mt-4 font-bold text-sm text-primary">Cocok untuk:</p>
-      <h1 className="text-secondary text-sm">{data.suitable_for}</h1>
-      <div className="w-full mt-9 flex justify-center">
+      {/* Cocok Untuk */}
+      <div className="mt-4">
+        <p className="font-bold text-yellow-400 text-sm">Cocok untuk:</p>
+        <p className="text-gray-300 text-sm">{data.suitable_for}</p>
+      </div>
+
+      {/* Tombol Booking */}
+      <div className="w-full mt-6 flex justify-center">
         <button
           onClick={goToPackageDetail}
-          className="py-1 px-4 rounded-md mt-2 text-primary border border-primary"
+          className="py-2 px-6 rounded-full mt-2 text-sm font-semibold bg-yellow-400 text-black
+                     hover:bg-yellow-500 transition duration-300 shadow-lg"
         >
           Booking Sekarang
         </button>
       </div>
     </motion.div>
   );
-}
+};
 
+// Komponen Utama
 export default function Pricing() {
   const [packages, setPackages] = useState([]);
 
   useEffect(() => {
     async function fetchPackages() {
-      // Gantilah URL ini dengan URL API kamu
-      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-      const response = await fetch(`${API_URL}/packages`);
-      const data = await response.json();
-
-      // Debugging untuk melihat data yang diterima dari API
-      console.log("Fetched Packages Data", data);
-
-      setPackages(data);
+      try {
+        const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const response = await fetch(`${API_URL}/packages`);
+        const data = await response.json();
+        setPackages(data);
+      } catch (error) {
+        console.error("Failed to fetch packages:", error);
+      }
     }
 
     fetchPackages();
-  }, []); // Kosongkan array dependensi untuk hanya menjalankan sekali setelah mount
+  }, []);
 
   return (
-    <>
-      <div
-        id="booking"
-        className="grid grid-cols-1 lg:grid-cols-4 mb-48 gap-6 mt-24 mx-6"
-      >
-        <div className="flex-col font-cinzel gap-4 flex">
+    <section id="booking" className="mb-48 mt-32 px-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        {/* Deskripsi Kiri */}
+        <div className="flex flex-col font-cinzel gap-4">
           <h1 className="text-primary text-xl font-bold lg:text-3xl">
             Temukan Paket yang Sesuai untuk Momen Anda
           </h1>
@@ -97,10 +118,11 @@ export default function Pricing() {
           </p>
         </div>
 
+        {/* Kartu Harga */}
         {packages.map((pkg, index) => (
           <PricingCard key={index} data={pkg} index={index} />
         ))}
       </div>
-    </>
+    </section>
   );
 }

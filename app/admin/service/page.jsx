@@ -175,70 +175,115 @@ export default function ServicePage() {
             <h3 className="text-lg font-semibold mb-4">
               {isEditing ? "Edit Paket" : "Tambah Paket Baru"}
             </h3>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <input
-                type="text"
-                name="name"
-                placeholder="Nama Paket"
-                className="input"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-              <input
-                type="number"
-                name="price"
-                placeholder="Harga"
-                className="input"
-                value={formData.price}
-                onChange={handleInputChange}
-                required
-              />
-              <input
-                type="number"
-                name="duration"
-                placeholder="Durasi (jam)"
-                className="input"
-                value={formData.duration}
-                onChange={handleInputChange}
-                required
-              />
-              <input
-                type="number"
-                name="total_photos"
-                placeholder="Total Foto"
-                className="input"
-                value={formData.total_photos}
-                onChange={handleInputChange}
-                required
-              />
-              <input
-                type="number"
-                name="edited_photos"
-                placeholder="Foto Diedit"
-                className="input"
-                value={formData.edited_photos}
-                onChange={handleInputChange}
-                required
-              />
-              <input
-                type="text"
-                name="includes"
-                placeholder="Include (contoh: Cetak, Album)"
-                className="input"
-                value={formData.includes}
-                onChange={handleInputChange}
-                required
-              />
-              <textarea
-                name="suitable_for"
-                placeholder="Cocok Untuk"
-                className="input"
-                value={formData.suitable_for}
-                onChange={handleInputChange}
-                required
-              />
-              <div className="flex justify-end gap-2">
+            <form
+              onSubmit={handleSubmit}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+              {/* Nama Paket */}
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Nama Paket
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  className="input w-full"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* Harga */}
+              <div>
+                <label className="block text-sm font-medium mb-1">Harga</label>
+                <input
+                  type="number"
+                  name="price"
+                  className="input w-full"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* Durasi */}
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Durasi (jam)
+                </label>
+                <input
+                  type="number"
+                  name="duration"
+                  className="input w-full"
+                  value={formData.duration}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* Total Foto */}
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Total Foto
+                </label>
+                <input
+                  type="number"
+                  name="total_photos"
+                  className="input w-full"
+                  value={formData.total_photos}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* Foto Diedit */}
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Foto Diedit
+                </label>
+                <input
+                  type="number"
+                  name="edited_photos"
+                  className="input w-full"
+                  value={formData.edited_photos}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* Include */}
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Include
+                </label>
+                <input
+                  type="text"
+                  name="includes"
+                  className="input w-full"
+                  value={formData.includes}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+
+              {/* Cocok Untuk (full width) */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium mb-1">
+                  Cocok Untuk
+                </label>
+                <textarea
+                  name="suitable_for"
+                  className="input w-full"
+                  value={formData.suitable_for}
+                  onChange={handleInputChange}
+                  required
+                  rows={4}
+                />
+              </div>
+
+              {/* Tombol Aksi */}
+              <div className="md:col-span-2 flex justify-end gap-2 mt-2">
                 <button
                   type="button"
                   className="px-4 py-2 bg-gray-300 rounded"

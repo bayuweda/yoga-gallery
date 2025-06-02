@@ -212,14 +212,14 @@ function PackageDetail({ id }) {
       if (data.message === "Appointment booked successfully!") {
         alert(data.message);
 
-        const total = packageData.price * formData.duration;
+        const total = packageData.price;
 
         // Menambahkan alamat dan no telepon pada query parameter
         router.push(
           `/payment?total=${total}&package=${
             packageData.name
           }&address=${encodeURIComponent(formData.address)}&phone=${
-            formData.phoneNumber
+            formData.phone
           }&name=${formData.name}`
         );
       } else {
@@ -262,34 +262,44 @@ function PackageDetail({ id }) {
 
   return (
     <>
-      <section className="mt-24 bg-white">
+      <section className="mt-24  bg-white">
         {/* Section Header */}
-        <section className="  font-cinzel">
-          <div className="relative bg-[url('/assets/bg-packagedetail.png')] bg-cover bg-center w-full h-[400px'] p-5">
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
-            <div className="relative py-10 z-10 border border-primary h-full flex items-center justify-center">
-              <div className="text-center space-y-6">
-                <h1 className="text-3xl text-primary font-bold">
-                  HALLO SELAMAT DATANG DI HALAMAN BOOKING
+        <section className="font-playfair ">
+          <div className="relative bg-[url('/assets/bg-packagedetail.png')] bg-cover bg-center w-full h-[400px]">
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-sm"></div>
+
+            {/* Konten */}
+            <div className="relative z-10 h-full flex items-center justify-center px-6 py-16">
+              <div className="text-center space-y-5 max-w-2xl">
+                {/* Judul */}
+                <h1 className="text-4xl lg:text-5xl font-bold text-yellow-300 drop-shadow-lg leading-snug tracking-wide">
+                  Hallo selamat datang di halaman booking
                 </h1>
-                <div className="space-y-2">
-                  <h2 className="uppercase border border-primary w-64 mx-auto text-primary text-2xl">
-                    PAKET {packageData.name}
-                  </h2>
-                  <p className="text-secondary font-jost font-semibold text-xl">
-                    Rp {packageData.price.toLocaleString("id-ID")}
-                  </p>
-                  <p className="text-yellow-400 uppercase text-lg max-w-md mx-auto">
-                    {packageData.suitable_for}
-                  </p>
+
+                {/* Nama Paket */}
+                <div>
+                  <span className="text-yellow-300 border border-yellow-500 px-6 py-2 inline-block text-lg lg:text-xl tracking-widest uppercase">
+                    Paket {packageData.name}
+                  </span>
                 </div>
+
+                {/* Harga */}
+                <p className="text-white font-bold text-3xl lg:text-4xl drop-shadow">
+                  Rp {packageData.price.toLocaleString("id-ID")}
+                </p>
+
+                {/* Deskripsi */}
+                <p className="text-yellow-400 uppercase tracking-wider text-sm lg:text-base max-w-md mx-auto font-medium">
+                  {packageData.suitable_for}
+                </p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Section: Purpose Selection */}
-        <section className="mt-24 px-4 font-jost text-black  text-center">
+        <section className="mt-24 mx-8 font-jost text-black  text-center">
           <h2 className="text-2xl font-bold mb-2">
             Silahkan pilih tujuan pemesananmu
           </h2>

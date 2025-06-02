@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import DividerWithLogo from "../line/Line";
 
@@ -79,10 +79,11 @@ function shuffleArray(array) {
   return shuffled;
 }
 
-function GalleryCard({ src, onClick }) {
+function GalleryCard({ src, onClick, colSpan }) {
   return (
     <div
-      className={` p-2 relative w-full aspect-[4/3] group overflow-hidden cursor-pointer`}
+      className={`p-2 relative w-full aspect-[4/3] group overflow-hidden cursor-pointer  ""
+      }`}
       onClick={onClick}
     >
       <Image
@@ -99,11 +100,18 @@ function GalleryCard({ src, onClick }) {
 export default function Portofolio() {
   const [selectedCategory, setSelectedCategory] = useState("semua");
   const [modalImage, setModalImage] = useState(null);
-  const [showAll, setShowAll] = useState(false); // <- toggle state
+  const [showAll, setShowAll] = useState(false);
+  const [shuffledPhotos, setShuffledPhotos] = useState([]);
+
+  useEffect(() => {
+    // Shuffle hanya saat kategori berubah
+    const photosToShuffle = Gallery[selectedCategory] || [];
+    setShuffledPhotos(shuffleArray(photosToShuffle));
+    setShowAll(false); // reset toggle saat kategori berganti
+  }, [selectedCategory]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
-    setShowAll(false); // Reset to "show sedikit" when category changes
   };
 
   const handleImageClick = (src) => {
@@ -114,8 +122,9 @@ export default function Portofolio() {
     setModalImage(null);
   };
 
-  const photos = shuffleArray(Gallery[selectedCategory] || []);
-  const displayedPhotos = showAll ? photos : photos.slice(0, 12); // toggle logic
+  const displayedPhotos = showAll
+    ? shuffledPhotos
+    : shuffledPhotos.slice(0, 12);
 
   return (
     <>
@@ -125,7 +134,7 @@ export default function Portofolio() {
             <h1 className="text-primary font-bold lg:text-3xl">
               HASIL KARYA KAMI
             </h1>
-            <p className="text-secondary lg:text-base text-sm mt-4 font-Playfair">
+            <p className="text-center text-gray-400 max-w-2xl mx-auto mb-10 animate__animated animate__fadeIn animate__delay-1s">
               Portofolio ini adalah bukti dari dedikasi kami dalam menghasilkan
               fotografi berkualitas tinggi. Jelajahi karya kami dan temukan
               bagaimana kami mengabadikan momen berharga.
@@ -171,7 +180,7 @@ export default function Portofolio() {
         </div>
 
         {/* Toggle Button */}
-        {photos.length > 10 && (
+        {shuffledPhotos.length > 10 && (
           <div className="w-full flex justify-center mt-5">
             <button
               onClick={() => setShowAll(!showAll)}
@@ -185,25 +194,30 @@ export default function Portofolio() {
         {/* Modal */}
         {modalImage && (
           <div
-            className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center"
+            className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
             onClick={closeModal}
           >
             <div
-              className="relative w-[90%] md:w-[60%] aspect-[4/3]"
+              className="relative w-full max-w-4xl max-h-[90vh] rounded-lg shadow-lg overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image
-                src={`/${modalImage}`}
-                alt="Preview"
-                fill
-                className="object-contain rounded-md"
-              />
-              <button
-                className="absolute top-2 right-2 text-white text-2xl"
-                onClick={closeModal}
-              >
-                &times;
-              </button>
+              <div className="relative">
+                <Image
+                  src={`/${modalImage}`}
+                  alt="Preview"
+                  width={800}
+                  height={600}
+                  className="object-contain w-full h-auto max-h-[90vh]"
+                  priority
+                />
+                <button
+                  onClick={closeModal}
+                  aria-label="Close modal"
+                  className="absolute top-2 right-2 text-white text-3xl font-bold hover:text-red-500 transition"
+                >
+                  &times;
+                </button>
+              </div>
             </div>
           </div>
         )}

@@ -89,7 +89,7 @@ export default function PembayaranPage() {
             Transfer ke rekening berikut:
           </p>
           <p className="text-lg font-bold text-gray-800">BCA 1234567890</p>
-          <p className="text-sm text-gray-600">a.n. PT Balistillukir</p>
+          <p className="text-sm text-gray-600">a.n. I KETUT YOGA MAHARDIKA</p>
         </div>
 
         <p className="mb-6 text-gray-600 text-sm">

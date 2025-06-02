@@ -1,6 +1,6 @@
 "use client";
 import Masonry from "react-masonry-css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Image from "next/image";
 import Navbar from "../components/pages/Navbar";
@@ -88,7 +88,7 @@ const breakpointColumnsObj = {
   default: 4,
   1100: 3,
   700: 2,
-  500: 1,
+  500: 3,
 };
 
 function MasonryGallery({ images }) {
@@ -98,7 +98,7 @@ function MasonryGallery({ images }) {
     <>
       <Masonry
         breakpointCols={breakpointColumnsObj}
-        className="flex gap-4 w-auto"
+        className="flex gap-1 lg:gap-4 w-auto"
         columnClassName="masonry-column"
       >
         {images.map((src, index) => (
@@ -121,23 +121,30 @@ function MasonryGallery({ images }) {
       {/* Modal */}
       {selectedImage && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+          className="fixed inset-0 bg-black bg-opacity-75 z-50 flex items-center justify-center p-4"
           onClick={() => setSelectedImage(null)}
         >
-          <div className="relative max-w-3xl w-full px-4">
-            <Image
-              src={`/${selectedImage}`}
-              alt="enlarged"
-              width={1000}
-              height={800}
-              className="w-full h-auto object-contain rounded-lg"
-            />
-            <button
-              className="absolute top-2 right-2 text-white text-2xl bg-black bg-opacity-50 p-2 rounded-full hover:bg-opacity-80 transition"
-              onClick={() => setSelectedImage(null)}
-            >
-              &times;
-            </button>
+          <div
+            className="relative w-full max-w-4xl max-h-[90vh] rounded-lg shadow-lg overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative">
+              <Image
+                src={`/${selectedImage}`}
+                alt="Preview"
+                width={800}
+                height={600}
+                className="object-contain w-full h-auto max-h-[90vh]"
+                priority
+              />
+              <button
+                onClick={() => setSelectedImage(null)}
+                aria-label="Close modal"
+                className="absolute top-2 right-2 text-white text-3xl font-bold hover:text-red-500 transition"
+              >
+                &times;
+              </button>
+            </div>
           </div>
         </div>
       )}
@@ -146,7 +153,14 @@ function MasonryGallery({ images }) {
 }
 
 function SectionGallery({ title, images }) {
-  const shuffledImages = shuffleArray(images);
+  const [shuffledImages, setShuffledImages] = useState([]);
+
+  useEffect(() => {
+    // Acak gambar hanya sekali saat komponen pertama kali mount
+    const shuffled = shuffleArray(images);
+    setShuffledImages(shuffled);
+  }, [images]);
+
   return (
     <section className="w-[90%] mx-auto my-12">
       <h2 className="text-2xl lg:text-3xl font-bold text-primary mb-6 border-b border-primary pb-2">

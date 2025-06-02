@@ -74,7 +74,7 @@ export default function Login() {
               </strong>
             </Link>
           </h3>
-          <div className="w-full">
+          <div className="w-full text-black">
             <form onSubmit={handleSubmit}>
               <label className="text-sm font-bold" htmlFor="email">
                 Email

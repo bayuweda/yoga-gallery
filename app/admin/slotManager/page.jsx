@@ -111,6 +111,17 @@ const SlotManager = () => {
     }
   };
 
+  const getTodayDateValue = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+  useEffect(() => {
+    setSelectedDate(getTodayDateValue());
+  }, []);
+
   return (
     <div className="p-6 bg-white rounded-xl shadow-md space-y-6">
       <div className="flex flex-col md:flex-row gap-3 items-start md:items-center mb-4">

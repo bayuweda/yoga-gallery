@@ -21,7 +21,7 @@ export default function About() {
 
   return (
     <>
-      <section ref={ref} className=" mt-44  lg:min-h-screen">
+      <section ref={ref} className=" mt-44 lg:pt-0 pt-64 lg:min-h-screen">
         <motion.h1
           variants={childVariants}
           className="text-xl text-center font-bold lg:hidden text-primary"
@@ -74,7 +74,7 @@ export default function About() {
             </motion.h1>
             <motion.p
               variants={childVariants}
-              className="text-secondary font-Playfair text-[12px] lg:text-base"
+              className="text-secondary lowercase font-Playfair text-[12px] lg:text-base"
             >
               YOGA GALLERY ADALAH STUDIO FOTOGRAFI YANG MENYEDIAKAN LAYANAN
               FOTOGRAFI PROFESIONAL DENGAN PENDEKATAN KREATIF. KAMI MEMILIKI
@@ -88,7 +88,7 @@ export default function About() {
             </motion.p>
             <motion.p
               variants={childVariants}
-              className="text-secondary font-Playfair text-[12px] font-normal lg:text-base"
+              className="text-secondary lowercase font-Playfair text-[12px] font-normal lg:text-base"
             >
               KAMI BERFOKUS PADA KUALITAS GAMBAR YANG MENGABADIKAN KEINDAHAN,
               CERITA, DAN EMOSI DALAM SETIAP JEPRETAN.

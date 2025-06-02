@@ -122,8 +122,8 @@ export default function Navbar() {
         isOpen={isSuccessOpen}
         onClose={() => setIsSuccessOpen(false)}
       />
-      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-        <div className="relative flex h-16 items-center justify-between">
+      <div className="mx-auto w-full   px-2 sm:px-6 lg:px-8">
+        <div className="relative flex h-16 items-center justify-between mx-6">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:ring-2 focus:ring-white focus:outline-hidden focus:ring-inset">
               <span className="absolute -inset-0.5" />
@@ -170,14 +170,14 @@ export default function Navbar() {
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             {!isAuthenticated ? (
               <div className="flex lg:gap-4 gap-2 font-bold">
-                <Link href="/register">
+                {/* <Link href="/register">
                   <button className="border-primary font-playfair text-[10px] lg:text-base hover:bg-primary px-2 hover:text-secondary border  py-1 rounded-md  text-primary">
                     Register
                   </button>
-                </Link>
+                </Link> */}
 
                 <Link href="/login">
-                  <button className="border-primary font-playfair text-[10px] lg:text-base bg-primary text-secondary  hover:bg-primary px-2 hover:text-secondary border  py-1 rounded-md  ">
+                  <button className="border-primary font-playfair text-[10px] lg:text-base hover:bg-primary px-2 hover:text-secondary border  py-1 rounded-md  text-primary">
                     Login
                   </button>
                 </Link>
