@@ -25,7 +25,7 @@ export default function Home() {
       <Portofolio />
 
       {/* <Pricing /> */}
-      <Testimoni />
+      {/* <Testimoni /> */}
       <Footer />
     </>
   );
