@@ -4,7 +4,7 @@ import Hero from "./components/pages/Hero";
 import Service from "./components/pages/Services";
 import About from "./components/pages/About";
 import Portofolio from "./components/pages/Portofolio";
-// import Pricing from "./components/pages/Pricing";
+import Pricing from "./components/pages/Pricing";
 import Testimoni from "./components/pages/Testimoni";
 import Footer from "./components/pages/Footer";
 import PhotographerCards from "./components/pages/Photographer";
@@ -24,8 +24,8 @@ export default function Home() {
       <PhotographerCards />
       <Portofolio />
 
-      {/* <Pricing /> */}
-      {/* <Testimoni /> */}
+      <Pricing />
+      <Testimoni />
       <Footer />
     </>
   );
