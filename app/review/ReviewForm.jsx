@@ -16,6 +16,7 @@ export default function ReviewForm() {
   const [comment, setComment] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +24,7 @@ export default function ReviewForm() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/reviews", {
+      const response = await fetch(`${API_URL}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

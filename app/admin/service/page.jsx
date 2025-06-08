@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function ServicePage() {
   const [packages, setPackages] = useState([]);
@@ -23,9 +24,7 @@ export default function ServicePage() {
   }, []);
 
   const fetchPackages = () => {
-    fetch(
-      "https://backend-yogagallery-production-23ad.up.railway.app/api/packages"
-    )
+    fetch(`${API_URL}/packages`)
       .then((res) => res.json())
       .then((data) => {
         setPackages(data);
@@ -54,8 +53,8 @@ export default function ServicePage() {
     };
 
     const url = isEditing
-      ? `https://backend-yogagallery-production-23ad.up.railway.app/api/packages/${editId}`
-      : "https://backend-yogagallery-production-23ad.up.railway.app/api/packages/store";
+      ? `${API_URL}/packages/${editId}`
+      : `${API_URL}/packages/store`;
     const method = isEditing ? "PUT" : "POST";
 
     fetch(url, {
@@ -91,7 +90,7 @@ export default function ServicePage() {
 
   const handleDelete = (id) => {
     if (confirm("Yakin ingin menghapus paket ini?")) {
-      fetch(`http://localhost:8000/api/packages/${id}`, {
+      fetch(`${API_URL}/packages/${id}`, {
         method: "DELETE",
       })
         .then((res) => res.json())
