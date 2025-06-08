@@ -21,7 +21,7 @@ export default function About() {
 
   return (
     <>
-      <section ref={ref} className=" mt-44 lg:pt-0 pt-64 lg:min-h-screen">
+      <section ref={ref} className=" mt-44 lg:pt-0 pt-96 lg:min-h-screen">
         <motion.h1
           variants={childVariants}
           className="text-xl text-center font-bold lg:hidden text-primary"
