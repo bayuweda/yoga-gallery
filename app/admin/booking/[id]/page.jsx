@@ -14,7 +14,8 @@ export default function BookingDetailPage() {
   useEffect(() => {
     const fetchPackages = async () => {
       try {
-        const res = await fetch("http://localhost:8000/api/packages");
+        const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const res = await fetch(`${API_URL}/packages`);
         if (!res.ok) throw new Error("Gagal mengambil data paket");
         const data = await res.json();
         setPackages(data);
@@ -31,7 +32,8 @@ export default function BookingDetailPage() {
 
     const fetchBooking = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/api/bookings/${id}`);
+        const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const res = await fetch(`${API_URL}/bookings/${id}`);
         if (!res.ok) throw new Error("Gagal mengambil detail booking");
 
         const data = await res.json();
@@ -48,12 +50,10 @@ export default function BookingDetailPage() {
 
   const handleMarkAsCompleted = async () => {
     try {
-      const res = await fetch(
-        `http://localhost:8000/api/booking/${id}/complete`,
-        {
-          method: "POST",
-        }
-      );
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const res = await fetch(`${API_URL}/booking/${id}/complete`, {
+        method: "POST",
+      });
 
       const data = await res.json();
       if (res.ok) {
@@ -81,27 +81,29 @@ export default function BookingDetailPage() {
   if (error) return <p className="text-red-500">{error}</p>;
   if (!booking) return <p>Booking tidak ditemukan.</p>;
 
-  const handleApprove = async () => {
-    try {
-      const res = await fetch(
-        `http://localhost:8000/api/booking/${id}/approve`,
-        {
-          method: "POST",
-        }
-      );
-
-      const data = await res.json();
-      if (res.ok) {
-        alert("Booking berhasil disetujui!");
-        setBooking((prev) => ({ ...prev, status: "approved" }));
-      } else {
-        alert(data.message || "Gagal menyetujui booking");
+ const handleApprove = async () => {
+  try {
+    const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const res = await fetch(
+      `${API_URL}/booking/${id}/approve`,
+      {
+        method: "POST",
       }
-    } catch (err) {
-      console.error(err);
-      alert("Terjadi kesalahan saat menyetujui booking");
+    );
+
+    const data = await res.json();
+    if (res.ok) {
+      alert("Booking berhasil disetujui!");
+      setBooking((prev) => ({ ...prev, status: "approved" }));
+    } else {
+      alert(data.message || "Gagal menyetujui booking");
     }
-  };
+  } catch (err) {
+    console.error(err);
+    alert("Terjadi kesalahan saat menyetujui booking");
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center ">

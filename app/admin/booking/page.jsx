@@ -9,48 +9,53 @@ export default function BookingPage() {
   const [showModal, setShowModal] = useState(false); // Menyimpan status modal
   const [filterStatus, setFilterStatus] = useState("all");
 
-  const fetchBookings = () => {
-    fetch("http://localhost:8000/api/bookings")
-      .then((res) => res.json())
-      .then((data) => {
-        setBookings(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching bookings:", err);
-        setLoading(false);
-      });
-  };
+ const fetchBookings = async () => {
+  try {
+    const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const response = await fetch(`${API_URL}/bookings`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await response.json();
+    setBookings(data);
+    setLoading(false);
+  } catch (err) {
+    console.error("Error fetching bookings:", err);
+    setLoading(false);
+  }
+};
+
 
   const markAsCompleted = async (id) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8000/api/booking/${id}/complete`,
-        {
-          method: "POST",
-        }
-      );
+  try {
+    const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const response = await fetch(`${API_URL}/booking/${id}/complete`, {
+      method: "POST",
+    });
 
-      const data = await response.json();
-      if (response.ok) {
-        alert("Booking ditandai sebagai selesai.");
+    const data = await response.json();
+    if (response.ok) {
+      alert("Booking ditandai sebagai selesai.");
 
-        // Menampilkan link WhatsApp untuk review
-        const reviewLink = data.whatsapp_link;
-        if (reviewLink) {
-          setWhatsappLink(reviewLink); // Set link WhatsApp yang diterima
-          setShowModal(true); // Menampilkan modal
-        }
-
-        // Refresh data booking
-        fetchBookings();
-      } else {
-        alert(data.message || "Terjadi kesalahan.");
+      // Menampilkan link WhatsApp untuk review
+      const reviewLink = data.whatsapp_link;
+      if (reviewLink) {
+        setWhatsappLink(reviewLink); // Set link WhatsApp yang diterima
+        setShowModal(true); // Menampilkan modal
       }
-    } catch (error) {
-      console.error("Error marking booking as completed:", error);
+
+      // Refresh data booking
+      fetchBookings();
+    } else {
+      alert(data.message || "Terjadi kesalahan.");
     }
-  };
+  } catch (error) {
+    console.error("Error marking booking as completed:", error);
+  }
+};
+
 
   const closeModal = () => {
     setShowModal(false); // Menutup modal

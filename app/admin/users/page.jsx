@@ -22,7 +22,9 @@ export default function UsersPage() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:8000/api/users");
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const res = await fetch(`${API_URL}/users`);
+      if (!res.ok) throw new Error("Gagal memuat data pengguna");
       const data = await res.json();
       setUsers(data);
     } catch (err) {
@@ -35,7 +37,8 @@ export default function UsersPage() {
   const handleAddUser = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:8000/api/register", {
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newUser),

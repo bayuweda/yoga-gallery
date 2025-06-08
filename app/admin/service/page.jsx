@@ -17,13 +17,14 @@ export default function ServicePage() {
     includes: "",
     suitable_for: "",
   });
+  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     fetchPackages();
   }, []);
 
   const fetchPackages = () => {
-    fetch("http://localhost:8000/api/packages")
+    fetch(`${API_URL}/packages`)
       .then((res) => res.json())
       .then((data) => {
         setPackages(data);
@@ -52,8 +53,8 @@ export default function ServicePage() {
     };
 
     const url = isEditing
-      ? `http://localhost:8000/api/packages/${editId}`
-      : "http://localhost:8000/api/packages/store";
+      ? `${API_URL}/packages/${editId}`
+      : `${API_URL}/packages/store`;
     const method = isEditing ? "PUT" : "POST";
 
     fetch(url, {
@@ -89,7 +90,7 @@ export default function ServicePage() {
 
   const handleDelete = (id) => {
     if (confirm("Yakin ingin menghapus paket ini?")) {
-      fetch(`http://localhost:8000/api/packages/${id}`, {
+      fetch(`${API_URL}/packages/${id}`, {
         method: "DELETE",
       })
         .then((res) => res.json())

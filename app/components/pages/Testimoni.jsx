@@ -29,7 +29,8 @@ export default function Testimoni() {
   useEffect(() => {
     async function fetchTestimonials() {
       try {
-        const res = await fetch("http://localhost:8000/api/reviews");
+        const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+        const res = await fetch(`${API_URL}/reviews`);
         const data = await res.json();
         setTestimonials(data);
       } catch (error) {
