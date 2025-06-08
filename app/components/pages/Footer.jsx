@@ -5,6 +5,7 @@ import {
   FaPhone,
   FaEnvelope,
   FaMapMarkerAlt,
+  FaWhatsapp,
 } from "react-icons/fa";
 
 export default function Footer() {
@@ -26,18 +27,24 @@ export default function Footer() {
             <a
               href="https://facebook.com"
               className="text-gray-400 hover:text-white text-xl"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaFacebookF />
             </a>
             <a
-              href="https://twitter.com"
+              href="https://wa.me/+6287866240153" // Ganti dengan nomor WhatsApp yang benar ya
               className="text-gray-400 hover:text-white text-xl"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <FaTwitter />
+              <FaWhatsapp />
             </a>
             <a
               href="https://instagram.com"
               className="text-gray-400 hover:text-white text-xl"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <FaInstagram />
             </a>
@@ -72,16 +79,16 @@ export default function Footer() {
           <ul className="mt-2 space-y-2">
             <li className="flex items-center gap-2 justify-center md:justify-start">
               <FaPhone className="text-blue-400" />
-              <span className="text-gray-400">+62 838-9449-9241</span>
+              <span className="text-gray-400">+62 87866240153</span>
             </li>
             <li className="flex items-center gap-2 justify-center md:justify-start">
               <FaEnvelope className="text-red-400" />
-              <span className="text-gray-400">bayuweda24@gmail.com</span>
+              <span className="text-gray-400">yogabmdika12@gmail.com</span>
             </li>
             <li className="flex items-center gap-2 justify-center md:justify-start">
               <FaMapMarkerAlt className="text-green-400" />
               <span className="text-gray-400">
-                Br Pupuan, Tegallalang, Gianyar, Bali
+                Br Petulu, Tegallalang, Gianyar, Bali
               </span>
             </li>
           </ul>
