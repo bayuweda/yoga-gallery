@@ -114,7 +114,7 @@ export default function Pricing() {
             Yoga Gallery, kami menyediakan berbagai pilihan paket fotografi yang
             dirancang untuk memenuhi kebutuhan Anda. Pilihlah paket yang sesuai,
             dan biarkan kami membantu Anda mengabadikan kenangan indah dalam
-            hidup Anda.
+            hidup Andaa.
           </p>
         </div>
 
