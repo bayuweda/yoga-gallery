@@ -17,14 +17,15 @@ export default function ServicePage() {
     includes: "",
     suitable_for: "",
   });
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     fetchPackages();
   }, []);
 
   const fetchPackages = () => {
-    fetch(`${API_URL}/packages`)
+    fetch(
+      "https://backend-yogagallery-production-23ad.up.railway.app/api/packages"
+    )
       .then((res) => res.json())
       .then((data) => {
         setPackages(data);
@@ -53,8 +54,8 @@ export default function ServicePage() {
     };
 
     const url = isEditing
-      ? `${API_URL}/packages/${editId}`
-      : `${API_URL}/packages/store`;
+      ? `https://backend-yogagallery-production-23ad.up.railway.app/api/packages/${editId}`
+      : "https://backend-yogagallery-production-23ad.up.railway.app/api/packages/store";
     const method = isEditing ? "PUT" : "POST";
 
     fetch(url, {
@@ -90,7 +91,7 @@ export default function ServicePage() {
 
   const handleDelete = (id) => {
     if (confirm("Yakin ingin menghapus paket ini?")) {
-      fetch(`${API_URL}/packages/${id}`, {
+      fetch(`http://localhost:8000/api/packages/${id}`, {
         method: "DELETE",
       })
         .then((res) => res.json())
