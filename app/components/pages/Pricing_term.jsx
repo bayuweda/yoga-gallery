@@ -5,14 +5,16 @@ import { useRef, useState, useEffect } from "react";
 import { FaCamera, FaClock, FaFileAlt } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
-// Komponen Kartu Harga
+// Komponen Tombol Booking Card
 const PricingCard = ({ data, index }) => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
   const router = useRouter();
+  const [isBooking, setIsBooking] = useState(false);
 
   const goToPackageDetail = () => {
-    router.push(`/Pricing/${data.id}`); // Atur sesuai struktur rute kamu
+    setIsBooking(true);
+    router.push(`/Pricing/${data.id}`);
   };
 
   return (
@@ -72,19 +74,39 @@ const PricingCard = ({ data, index }) => {
       <div className="w-full mt-6 flex justify-center">
         <button
           onClick={goToPackageDetail}
-          className="py-2 px-6 rounded-full mt-2 text-sm font-semibold bg-yellow-400 text-black
-                     hover:bg-yellow-500 transition duration-300 shadow-lg"
+          disabled={isBooking}
+          className={`py-2 px-6 rounded-full mt-2 text-sm font-semibold transition duration-300 shadow-lg ${
+            isBooking
+              ? "bg-yellow-300 text-black cursor-not-allowed"
+              : "bg-yellow-400 text-black hover:bg-yellow-500"
+          }`}
         >
-          Booking Sekarang
+          {isBooking ? "Booking Sekarang..." : "Booking Sekarang"}
         </button>
       </div>
     </motion.div>
   );
 };
 
+// Skeleton Loader
+const SkeletonCard = () => (
+  <div className="animate-pulse rounded-2xl p-6 border border-gray-700 bg-zinc-900 shadow-xl">
+    <div className="h-4 w-3/4 bg-gray-700 rounded mb-4"></div>
+    <div className="h-6 w-1/2 bg-gray-700 rounded mb-6"></div>
+    <div className="space-y-2">
+      <div className="h-4 bg-gray-700 rounded w-full"></div>
+      <div className="h-4 bg-gray-700 rounded w-5/6"></div>
+      <div className="h-4 bg-gray-700 rounded w-2/3"></div>
+    </div>
+    <div className="mt-4 h-4 w-1/2 bg-gray-700 rounded"></div>
+    <div className="mt-6 h-8 bg-gray-700 rounded w-full"></div>
+  </div>
+);
+
 // Komponen Utama
 export default function Pricing() {
   const [packages, setPackages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchPackages() {
@@ -95,6 +117,8 @@ export default function Pricing() {
         setPackages(data);
       } catch (error) {
         console.error("Failed to fetch packages:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -114,14 +138,16 @@ export default function Pricing() {
             Yoga Gallery, kami menyediakan berbagai pilihan paket fotografi yang
             dirancang untuk memenuhi kebutuhan Anda. Pilihlah paket yang sesuai,
             dan biarkan kami membantu Anda mengabadikan kenangan indah dalam
-            hidup Andaa.
+            hidup Anda.
           </p>
         </div>
 
-        {/* Kartu Harga */}
-        {packages.map((pkg, index) => (
-          <PricingCard key={index} data={pkg} index={index} />
-        ))}
+        {/* Kartu Harga atau Skeleton */}
+        {isLoading
+          ? Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)
+          : packages.map((pkg, index) => (
+              <PricingCard key={index} data={pkg} index={index} />
+            ))}
       </div>
     </section>
   );

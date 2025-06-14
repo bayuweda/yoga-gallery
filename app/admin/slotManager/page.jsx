@@ -11,6 +11,16 @@ const SlotManager = () => {
   const [slots, setSlots] = useState([]);
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedWeek, setSelectedWeek] = useState("this");
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.role) {
+      setRole(user.role);
+    }
+
+    setSelectedDate(getTodayDateValue());
+  }, []);
 
   useEffect(() => {
     async function fetchSlots() {
@@ -50,7 +60,7 @@ const SlotManager = () => {
       alert("Slot berhasil ditambahkan!");
       setDate("");
       setTime("");
-      setSelectedDate(date); // refresh data
+      setSelectedDate(date);
     } catch (error) {
       alert(error.message);
     }
@@ -69,9 +79,27 @@ const SlotManager = () => {
       if (!response.ok) throw new Error(data.message || "Gagal menghapus slot");
 
       alert("Slot berhasil dihapus");
-      setSelectedDate(selectedDate); // refresh data
+      setSelectedDate(selectedDate);
     } catch (error) {
       alert(error.message);
+    }
+  };
+
+  const handleGenerateWeekly = async () => {
+    try {
+      const res = await fetch(
+        `${API_URL}/admin/appointments/generate-weekly?week=${selectedWeek}`,
+        {
+          method: "POST",
+        }
+      );
+
+      const data = await res.json();
+      alert(data.message || "Slot berhasil digenerate!");
+      setSelectedDate(""); // Refresh data
+    } catch (err) {
+      console.error("Gagal generate:", err);
+      alert("Gagal generate slot mingguan.");
     }
   };
 
@@ -89,28 +117,6 @@ const SlotManager = () => {
     return slotDateTime < new Date();
   };
 
-  // Tambahkan state untuk pilihan minggu
-
-  const handleGenerateWeekly = async () => {
-    try {
-      const res = await fetch(
-        `${API_URL}/admin/appointments/generate-weekly?week=${selectedWeek}`,
-        {
-          method: "POST",
-        }
-      );
-
-      const data = await res.json();
-      console.log("tess data", data);
-
-      alert(data.message || "Slot berhasil digenerate!");
-      setSelectedDate(""); // Refresh data
-    } catch (err) {
-      console.error("Gagal generate:", err);
-      alert("Gagal generate slot mingguan.");
-    }
-  };
-
   const getTodayDateValue = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -118,9 +124,6 @@ const SlotManager = () => {
     const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
-  useEffect(() => {
-    setSelectedDate(getTodayDateValue());
-  }, []);
 
   return (
     <div className="p-6 bg-white rounded-xl shadow-md space-y-6">
@@ -129,44 +132,50 @@ const SlotManager = () => {
           Manajemen Jadwal Fotografer
         </h2>
 
-        <div className="flex items-center gap-2">
-          <select
-            value={selectedWeek}
-            onChange={(e) => setSelectedWeek(e.target.value)}
-            className="border px-3 py-2 rounded text-sm"
-          >
-            <option value="this">Minggu Ini</option>
-            <option value="next">Minggu Depan</option>
-          </select>
-          <button
-            onClick={handleGenerateWeekly}
-            className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
-          >
-            Generate Slot
-          </button>
-        </div>
+        {/* Generate slot hanya bisa oleh owner */}
+        {role === "owner" && (
+          <div className="flex items-center gap-2">
+            <select
+              value={selectedWeek}
+              onChange={(e) => setSelectedWeek(e.target.value)}
+              className="border px-3 py-2 rounded text-sm"
+            >
+              <option value="this">Minggu Ini</option>
+              <option value="next">Minggu Depan</option>
+            </select>
+            <button
+              onClick={handleGenerateWeekly}
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
+            >
+              Generate Slot
+            </button>
+          </div>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-          className="border px-3 py-2 rounded"
-        />
-        <input
-          type="time"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          className="border px-3 py-2 rounded"
-        />
-        <button
-          onClick={handleAddSlot}
-          className="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700"
-        >
-          Tambah Slot
-        </button>
-      </div>
+      {/* Tambah slot hanya bisa oleh owner */}
+      {role === "owner" && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="border px-3 py-2 rounded"
+          />
+          <input
+            type="time"
+            value={time}
+            onChange={(e) => setTime(e.target.value)}
+            className="border px-3 py-2 rounded"
+          />
+          <button
+            onClick={handleAddSlot}
+            className="bg-blue-600 text-white rounded px-4 py-2 hover:bg-blue-700"
+          >
+            Tambah Slot
+          </button>
+        </div>
+      )}
 
       <div>
         <label className="block mt-4 mb-2">Filter berdasarkan tanggal:</label>
@@ -219,7 +228,8 @@ const SlotManager = () => {
                     )}
                   </td>
                   <td className="p-2">
-                    {!slot.is_booked && !expired && (
+                    {/* Tombol hapus hanya untuk owner */}
+                    {role === "owner" && !slot.is_booked && !expired && (
                       <button
                         onClick={() => handleDeleteSlot(slot.id)}
                         className="text-sm text-white bg-red-500 hover:bg-red-600 px-3 py-1 rounded"

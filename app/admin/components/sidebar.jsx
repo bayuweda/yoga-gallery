@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+
+import Cookies from "js-cookie";
 
 // SVG Heroicons
 const DashboardIcon = (
@@ -88,6 +91,22 @@ const ScheduleIcon = (
     />
   </svg>
 );
+const LogoutIcon = (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="w-5 h-5"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+    strokeWidth={1.5}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6A2.25 2.25 0 005.25 5.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3-3H9m9 0l-3-3m3 3l-3 3"
+    />
+  </svg>
+);
 
 const navItems = [
   { name: "Dashboard", icon: DashboardIcon, path: "/admin/dashboard" },
@@ -99,13 +118,28 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false); // ✅ state loading
+
+  const handleLogout = () => {
+    if (confirm("Yakin ingin logout?")) {
+      setIsLoggingOut(true); // ✅ mulai loading
+      setTimeout(() => {
+        localStorage.removeItem("user");
+        Cookies.remove("jwt");
+        Cookies.remove("role");
+        router.push("/");
+      }, 1000); // simulasi proses logout
+    }
+  };
 
   return (
     <aside className="w-64 bg-slate-950 text-white min-h-screen p-4">
-      <div className="flex flex-col items-center w-full mb-11 ">
+      <div className="flex flex-col items-center w-full mb-11">
         <h2 className="text-xl font-bold mb-6"> YOGA GALLERY</h2>
         <img className="w-24" src="/assets/logo-login.png" alt="" />
       </div>
+
       <nav className="space-y-2">
         {navItems.map((item) => (
           <Link
@@ -120,6 +154,17 @@ export default function Sidebar() {
           </Link>
         ))}
       </nav>
+
+      <button
+        onClick={handleLogout}
+        disabled={isLoggingOut}
+        className={`flex items-center gap-3 px-4 py-2 rounded mt-6 transition text-white ${
+          isLoggingOut ? "bg-red-400 cursor-not-allowed" : "hover:bg-red-600"
+        }`}
+      >
+        {LogoutIcon}
+        <span>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+      </button>
     </aside>
   );
 }

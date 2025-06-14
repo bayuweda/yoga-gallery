@@ -5,61 +5,58 @@ import { useEffect, useState } from "react";
 export default function BookingPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [whatsappLink, setWhatsappLink] = useState(""); // Menyimpan link WhatsApp
-  const [showModal, setShowModal] = useState(false); // Menyimpan status modal
+  const [whatsappLink, setWhatsappLink] = useState("");
+  const [showModal, setShowModal] = useState(false);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [navigatingId, setNavigatingId] = useState(null); // Untuk loading saat klik "Lihat Detail"
 
- const fetchBookings = async () => {
-  try {
-    const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const response = await fetch(`${API_URL}/bookings`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await response.json();
-    setBookings(data);
-    setLoading(false);
-  } catch (err) {
-    console.error("Error fetching bookings:", err);
-    setLoading(false);
-  }
-};
-
+  const fetchBookings = async () => {
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await fetch(`${API_URL}/bookings`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setBookings(data);
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching bookings:", err);
+      setLoading(false);
+    }
+  };
 
   const markAsCompleted = async (id) => {
-  try {
-    const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const response = await fetch(`${API_URL}/booking/${id}/complete`, {
-      method: "POST",
-    });
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const response = await fetch(`${API_URL}/booking/${id}/complete`, {
+        method: "POST",
+      });
 
-    const data = await response.json();
-    if (response.ok) {
-      alert("Booking ditandai sebagai selesai.");
+      const data = await response.json();
+      if (response.ok) {
+        alert("Booking ditandai sebagai selesai.");
 
-      // Menampilkan link WhatsApp untuk review
-      const reviewLink = data.whatsapp_link;
-      if (reviewLink) {
-        setWhatsappLink(reviewLink); // Set link WhatsApp yang diterima
-        setShowModal(true); // Menampilkan modal
+        const reviewLink = data.whatsapp_link;
+        if (reviewLink) {
+          setWhatsappLink(reviewLink);
+          setShowModal(true);
+        }
+
+        fetchBookings();
+      } else {
+        alert(data.message || "Terjadi kesalahan.");
       }
-
-      // Refresh data booking
-      fetchBookings();
-    } else {
-      alert(data.message || "Terjadi kesalahan.");
+    } catch (error) {
+      console.error("Error marking booking as completed:", error);
     }
-  } catch (error) {
-    console.error("Error marking booking as completed:", error);
-  }
-};
-
+  };
 
   const closeModal = () => {
-    setShowModal(false); // Menutup modal
-    setWhatsappLink(""); // Menghapus link WhatsApp
+    setShowModal(false);
+    setWhatsappLink("");
   };
 
   useEffect(() => {
@@ -91,6 +88,7 @@ export default function BookingPage() {
 
     return counts;
   };
+
   const statusCounts = getStatusCounts();
   const filteredBookings =
     filterStatus === "all"
@@ -107,7 +105,6 @@ export default function BookingPage() {
       ) : (
         <div className="overflow-x-auto">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
-            {/* Statistik */}
             <div className="flex gap-4">
               <div className="bg-yellow-100 text-yellow-800 px-4 py-2 rounded-lg shadow">
                 Pending: <strong>{statusCounts.pending}</strong>
@@ -120,7 +117,6 @@ export default function BookingPage() {
               </div>
             </div>
 
-            {/* Dropdown filter */}
             <div>
               <label className="mr-2 font-medium">Filter Status:</label>
               <select
@@ -192,14 +188,40 @@ export default function BookingPage() {
                         {booking.status || "pending"}
                       </span>
                     </td>
-
                     <td className="px-4 flex py-3 space-x-2">
-                      <a
-                        href={`/admin/booking/${booking.id}`}
-                        className="text-blue-600 hover:underline whitespace-nowrap"
+                      <button
+                        onClick={() => {
+                          setNavigatingId(booking.id);
+                          window.location.href = `/admin/booking/${booking.id}`;
+                        }}
+                        className="text-blue-600 hover:underline whitespace-nowrap flex items-center gap-1"
+                        disabled={navigatingId === booking.id}
                       >
-                        Lihat Detail
-                      </a>
+                        {navigatingId === booking.id ? (
+                          <svg
+                            className="animate-spin h-4 w-4 text-blue-600"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                          >
+                            <circle
+                              className="opacity-25"
+                              cx="12"
+                              cy="12"
+                              r="10"
+                              stroke="currentColor"
+                              strokeWidth="4"
+                            />
+                            <path
+                              className="opacity-75"
+                              fill="currentColor"
+                              d="M4 12a8 8 0 018-8v8H4z"
+                            />
+                          </svg>
+                        ) : (
+                          "Lihat Detail"
+                        )}
+                      </button>
                     </td>
                   </tr>
                 );
@@ -209,7 +231,7 @@ export default function BookingPage() {
         </div>
       )}
 
-      {/* Modal untuk menampilkan link WhatsApp */}
+      {/* Modal WhatsApp Review */}
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="p-6 rounded-2xl shadow-xl bg-white max-w-sm w-full text-center">
@@ -247,7 +269,7 @@ export default function BookingPage() {
               </a>
               <button
                 onClick={closeModal}
-                className=" w-24 mt-4 px-4 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition"
+                className="w-24 mt-4 px-4 py-2 bg-gray-800 text-white rounded-xl hover:bg-gray-900 transition"
               >
                 Tutup
               </button>

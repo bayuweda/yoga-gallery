@@ -12,6 +12,7 @@ export default function Login() {
   const router = useRouter();
   const [isSuccessOpen, setIsSuccessOpen] = useState(false);
   const [isErrorOpen, setIsErrorOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // ✅ Tambahkan state loading
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -19,37 +20,33 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // ✅ Mulai loading
     try {
       const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
       const response = await axios.post(`${API_URL}/login`, form);
-      console.log("data response", response);
 
-      // Simpan token ke cookies
       Cookies.set("jwt", response.data.access_token, { expires: 7 });
-
-      // Simpan role ke cookies
       Cookies.set("role", response.data.role, { expires: 7 });
+      localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      // Tampilkan modal sukses
       setIsSuccessOpen(true);
 
       setTimeout(() => {
         setIsSuccessOpen(false);
-
-        // Arahkan berdasarkan role
-        if (response.data.role === "owner") {
-          router.push("/admin/dashboard"); // Arahkan ke dashboard admin
+        if (response.data.role === "owner" || response.data.role === "admin") {
+          router.push("/admin/dashboard");
         } else {
-          router.push("/"); // Arahkan ke dashboard pengguna
+          router.push("/");
         }
       }, 2000);
     } catch (error) {
       console.error("Login failed:", error);
       setIsErrorOpen(true);
-
       setTimeout(() => {
         setIsErrorOpen(false);
       }, 2000);
+    } finally {
+      setIsLoading(false); // ✅ Hentikan loading
     }
   };
 
@@ -66,14 +63,7 @@ export default function Login() {
 
         <div className="lg:w-1/2 w-full bg-secondary flex flex-col rounded-r-md items-center p-6">
           <h1 className="text-3xl font-bold text-primary mb-2">Welcome Back</h1>
-          <h3 className="mb-10 text-sm text-black/40 font-light">
-            New Here?{" "}
-            <Link href="/register">
-              <strong className="text-primary text-sm">
-                Create an account
-              </strong>
-            </Link>
-          </h3>
+
           <div className="w-full text-black">
             <form onSubmit={handleSubmit}>
               <label className="text-sm font-bold" htmlFor="email">
@@ -103,9 +93,14 @@ export default function Login() {
               <div className="w-full flex justify-end">
                 <button
                   type="submit"
-                  className="bg-primary text-white px-4 py-2 rounded"
+                  disabled={isLoading} // ✅ Disable tombol saat loading
+                  className={`px-4 py-2 rounded text-white transition ${
+                    isLoading
+                      ? "bg-primary/60 cursor-not-allowed"
+                      : "bg-primary hover:bg-primary/90"
+                  }`}
                 >
-                  Login
+                  {isLoading ? "Loading..." : "Login"}
                 </button>
               </div>
             </form>

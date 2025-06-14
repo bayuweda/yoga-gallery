@@ -43,10 +43,10 @@ export default function DashboardPage() {
       return;
     }
 
-    if (role !== "owner") {
-      router.replace("/unauthorized");
-      return;
-    }
+    // if (role !== "owner" || role !== "admin") {
+    //   router.replace("/unauthorized");
+    //   return;
+    // }
   }, [router]);
 
   async function fetchBookings() {

@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 export default function BookingDetailPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [packages, setPackages] = useState("");
+  const [packages, setPackages] = useState([]);
   const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -81,29 +81,25 @@ export default function BookingDetailPage() {
   if (error) return <p className="text-red-500">{error}</p>;
   if (!booking) return <p>Booking tidak ditemukan.</p>;
 
- const handleApprove = async () => {
-  try {
-    const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const res = await fetch(
-      `${API_URL}/booking/${id}/approve`,
-      {
+  const handleApprove = async () => {
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const res = await fetch(`${API_URL}/booking/${id}/approve`, {
         method: "POST",
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert("Booking berhasil disetujui!");
+        setBooking((prev) => ({ ...prev, status: "approved" }));
+      } else {
+        alert(data.message || "Gagal menyetujui booking");
       }
-    );
-
-    const data = await res.json();
-    if (res.ok) {
-      alert("Booking berhasil disetujui!");
-      setBooking((prev) => ({ ...prev, status: "approved" }));
-    } else {
-      alert(data.message || "Gagal menyetujui booking");
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat menyetujui booking");
     }
-  } catch (err) {
-    console.error(err);
-    alert("Terjadi kesalahan saat menyetujui booking");
-  }
-};
-
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center ">
